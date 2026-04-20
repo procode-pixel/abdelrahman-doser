@@ -1,0 +1,25 @@
+{
+  "name": "doser-portofilo-website",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/procode-pixel/Doser-portofilo-website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0",
+    "next": "^16.2.4",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}
