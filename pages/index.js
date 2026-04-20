@@ -196,53 +196,59 @@ export default function Home({ initialData }) {
     }
   }, [colors, themeMode])
 
+  // Advanced SEO & Social Sharing Optimization
+  const siteUrl = "https://itsmedoser.vercel.app";
+  const absoluteFullImg = `${siteUrl}${images.personal}`;
+
   return (
     <>
       <Head>
-        <title>{lang === 'ar' ? 'عبدالرحمن السيد (Doser) | مطور برامج وشخصية تقنية' : 'Abdelrahman Doser | Full-Stack Developer & UI/UX Expert'}</title>
+        {/* Anti-Gravity SEO Engine v2.0 */}
+        <title>{lang === 'ar' ? 'عبدالرحمن السيد (Doser) | مبرمج مواقع محترف وخبير React' : 'Abdelrahman Doser | Expert Full-Stack Developer & React Specialist'}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         
-        {/* Basic SEO */}
-        <meta name="description" content={lang === 'ar' ? 'اكتشف معرض أعمال عبدالرحمن السيد (Doser)، مطور برمجيات متكامل ومصمم واجهات متخصص في بناء تطبيقات ويب عصرية، سريعة، وذكية. خبرة في React و Next.js و Firebase.' : 'Explore the professional portfolio of Abdelrahman Elsayed (Doser), a Full-Stack Developer and UI/UX Specialist crafting high-performance, modern web applications with React, Next.js, and Firebase.'} />
-        <meta name="keywords" content="Abdelrahman Doser, عبدالرحمن السيد, Doser, مطور ويب, مبرمج, تصميم واجهات, Full-Stack Developer, UI/UX Designer, React Developer, Next.js Expert, Software Engineer Egypt, افضل مبرمج في مصر, برمجة مواقع, تصميم تطبيقات, تحسين محركات البحث, SEO for Developers" />
+        {/* Core Keywords and Authority Tags */}
+        <meta name="description" content={lang === 'ar' ? 'هل تبحث عن مبرمج مواقع محترف؟ عبدالرحمن السيد (Doser) هو مبرمج احترافى متخصص في React و Next.js ودمج الذكاء الاصطناعي. اكتشف معرض أعمال أفضل مبرمج في مصر.' : 'Expert Full-Stack Web Developer. Abdelrahman Doser (Doser) is a professional programmer specializing in React, Next.js, and AI. Explore projects by Egypt\'s leading software engineer.'} />
+        <meta name="keywords" content="عبدالرحمن السيد, عبدالرحمن Doser, مبرمج مواقع, مبرمج احترافى, مبرمج react, مبرمج ويب, افضل مبرمج في مصر, مبرمج واجهات, Abdelrahman Doser, Doser, Full-Stack Developer, Freelance Programmer Egypt, React Expert" />
         <meta name="author" content="Abdelrahman Doser" />
-        <link rel="canonical" href="https://itsmedoser.vercel.app/" />
+        <link rel="canonical" href={siteUrl} />
 
-        {/* Social Media & Open Graph */}
-        <meta property="og:title" content={lang === 'ar' ? 'عبدالرحمن السيد | معرض الأعمال الرقمي' : 'Abdelrahman Doser | Digital Portfolio'} />
-        <meta property="og:description" content={lang === 'ar' ? 'بناء تجارب رقمية استثنائية تجمع بين التصميم الراقي والأداء القوي.' : 'Crafting exceptional digital experiences combining premium design with high-performance code.'} />
+        {/* Global Social Sharing (Open Graph) */}
+        <meta property="og:title" content={lang === 'ar' ? 'عبدالرحمن السيد | مبرمج مواقع محترف' : 'Abdelrahman Doser | Expert Web Developer'} />
+        <meta property="og:description" content={lang === 'ar' ? 'خبير في بناء وتطوير تطبيقات الويب الحديثة بذكاء اصطناعي.' : 'Building high-performance, AI-driven web architectures.'} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://itsmedoser.vercel.app/" />
-        <meta property="og:image" content={images.personal} />
+        <meta property="og:url" content={siteUrl} />
+        <meta property="og:image" content={absoluteFullImg} />
         <meta property="og:site_name" content="Doser Portfolio" />
         <meta property="og:locale" content={lang === 'ar' ? 'ar_EG' : 'en_US'} />
         
-        {/* Twitter Cards */}
+        {/* Professional Twitter/X Card Support */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Abdelrahman Doser | Full-Stack Developer" />
-        <meta name="twitter:description" content="Professional Web Developer & UI/UX Designer specializing in modern digital solutions." />
-        <meta name="twitter:image" content={images.personal} />
+        <meta name="twitter:title" content="Abdelrahman Doser | Professional Web Developer" />
+        <meta name="twitter:description" content="Expert in React, Next.js, and Advanced AI Integration." />
+        <meta name="twitter:image" content={absoluteFullImg} />
 
-        {/* JSON-LD Schema.org Data */}
+        {/* JSON-LD Schema.org Data (The Advanced SEO Secret) */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Person",
-            "name": "Abdelrahman Elsayed (Doser)",
-            "alternateName": ["Abdelrahman Doser", "عبدالرحمن السيد", "دوسر"],
-            "url": "https://itsmedoser.vercel.app/",
-            "image": images.personal,
-            "jobTitle": "Full-Stack Developer & UI/UX Designer",
-            "description": "Professional Web Developer specialized in React, Next.js, and creating high-end digital solutions in Egypt.",
+            "name": "Abdelrahman Doser",
+            "alternateName": ["عبدالرحمن السيد", "دوسر", "Abdelrahman Elsayed"],
+            "url": siteUrl,
+            "image": absoluteFullImg,
+            "jobTitle": "Full-Stack Software Engineer & AI Specialist",
+            "description": "Professional Programmer specialized in high-performance web applications using React and Next.js.",
             "address": {
               "@type": "PostalAddress",
               "addressLocality": "Cairo",
               "addressCountry": "Egypt"
             },
-            "knowsAbout": ["Web Development", "UI/UX Design", "React", "Next.js", "Firebase", "Backend Development", "JavaScript", "Python"],
+            "knowsAbout": ["Web Development", "React", "Next.js", "Node.js", "AI Integration", "Software Architecture"],
             "sameAs": [
               "https://www.facebook.com/profile.php?id=61581958772971",
               "https://www.instagram.com/_doser_1/",
+              "https://github.com/procode-pixel",
               "https://wa.me/201151071517"
             ]
           })
