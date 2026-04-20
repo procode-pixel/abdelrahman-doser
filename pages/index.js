@@ -120,7 +120,7 @@ export default function Home({ initialData }) {
   }
 
   const sections = adminData?.sections || { home: true, education: true, services: true, contact: true, mywebsites: true }
-  const colors = adminData?.colors || {
+  const colors = {
     dark: { mainColor: '#00f0ff', bgColor: '#050505', secBgColor: '#111111', textColor: '#f0f0f0' },
     light: { mainColor: '#0070f3', bgColor: '#f0f4f8', secBgColor: '#ffffff', textColor: '#1a202c' }
   }
@@ -129,41 +129,48 @@ export default function Home({ initialData }) {
     { id: 1, title: 'Doser hub for easy Browse', desc: 'A hub for easy browsing and resources.', url: 'https://doser-hub.vercel.app/' }
   ]
 
-  const texts = adminData?.texts || {
+  const defaultTexts = {
     en: {
-      home: "Home", education: "Education", services: "Services", contact: "Contact", mywebsites: "My Websites",
-      hi: "Hi, I'm", name: "Abdelrahman", iama: "I'm a", social: "Connect with me",
-      homeDesc: "Passionate Full-Stack Developer & UI/UX Designer creating innovative digital solutions.",
-      hire: "Hire Me", contactme: "Contact Me", educationHeading: "My Education Journey",
-      highSchool: "High School", highSchoolDesc: "Attended Al-Orman Language School where I mastered HTML, CSS, JavaScript, and Python.",
-      university: "Current Studies", universityDesc: "Currently enrolled at Al-Orman Secondary School for Languages.",
-      internship: "Achievements", internshipDesc: "Awarded first place certificate in the Dokki Governorate Inventor Competition.",
-      firstJob: "Early Career", firstJobDesc: "My first professional experience was in technology and mobile repair at age 9.",
-      servicesHeading: "Premium Services", uiux: "UI/UX Design", frontend: "Frontend Development", backend: "Backend Development", testing: "Quality Assurance",
-      uiuxDesc: "Creating intuitive and visually appealing interfaces with modern glassmorphism.",
-      frontendDesc: "Building responsive and interactive web applications using Next.js & React.",
-      backendDesc: "Developing robust server-side applications and secure APIs.",
-      testingDesc: "Ensuring software reliability through comprehensive testing processes.",
-      contactHeading: "Let's Work Together", namePlaceholder: "Your Name", emailPlaceholder: "Your Email", messagePlaceholder: "Your Message", sendMessage: "Send Message",
-      myWebsitesHeading: "Featured Projects", viewProject: "View Project", faq: "FAQ", aboutMe: "About Me", copyright: "Abdelrahman Elsayed | All Rights Reserved"
+      home: "Home", education: "Learning Journey", services: "Services", contact: "Contact", mywebsites: "Projects",
+      hi: "Hi, I'm", name: "Abdelrahman Doser", iama: "I'm a", social: "Find me on",
+      homeDesc: "Full-Stack Developer & AI Specialist. I build modern websites and integrated AI solutions for a smarter digital experience.",
+      hire: "Hire Me", contactme: "Contact Me", educationHeading: "My Learning Path",
+      myWebsitesHeading: "Featured Projects", viewProject: "View Project", faq: "FAQ", aboutMe: "About Me", copyright: "Abdelrahman Doser | All Rights Reserved",
+      skillsHeading: "Technical Skills", aiSpecialist: "AI Integration Specialist",
+      edu1Title: "Web Fundamentals (Elzero)", edu1Desc: "Learned HTML, CSS, and JavaScript with the best practices from Elzero Web School.",
+      edu2Title: "Python & Java (Codezilla)", edu2Desc: "Mastered programming logic and backend basics with Python and Java.",
+      edu3Title: "Modern Tech (Dave Gray & Others)", edu3Desc: "Advanced learning in React, Next.js, and Node.js for building dynamic apps.",
+      edu4Title: "AI Development", edu4Desc: "Deeply experienced in using and integrating AI to solve coding challenges faster.",
+      uiux: "UI/UX Design", frontend: "Frontend Development", backend: "Backend Development", testing: "QA & Testing",
+      uiuxDesc: "Designing clean, modern, and user-friendly interfaces.",
+      frontendDesc: "Creating responsive web apps using React and Next.js.",
+      backendDesc: "Building stable servers and databases with Node.js.",
+      testingDesc: "Ensuring your website works perfectly on all devices.",
+      contactHeading: "Let's Work Together", namePlaceholder: "Your Name", emailPlaceholder: "Your Email", messagePlaceholder: "How can I help you?", sendMessage: "Send Message"
     },
     ar: {
-      home: "الرئيسية", education: "المسيرة التعليمية", services: "خدماتي", contact: "للتواصل", mywebsites: "معرض الأعمال",
-      hi: "أهلاً بك، أنا", name: "عبدالرحمن", iama: "أنا", social: "منصات التواصل",
-      homeDesc: "مطور برمجيات متكامل (Full-Stack) ومصمم واجهات استخدام (UI/UX). أمتلك شغفاً كبيراً في تحويل الأفكار إلى تجارب رقمية استثنائية وعالية الأداء.",
-      hire: "اطلب خدماتي", contactme: "راسلني الآن", educationHeading: "مسيرتي التعليمية",
-      highSchool: "المرحلة الثانوية", highSchoolDesc: "درست في مدارس الأورمان للغات، حيث كان شغفي الأول وبدايتي الحقيقية مع أساسيات البرمجة وتطوير الويب.",
-      university: "الدراسة الحالية", universityDesc: "أستكمل مسيرتي التعليمية حالياً في مدارس الأورمان الثانوية للغات، مع التركيز على صقل مهاراتي التقنية المتقدمة.",
-      internship: "الإنجازات والجوائز", internshipDesc: "حصدت شهادة المركز الأول على مستوى محافظة الدقي في مسابقة 'المخترع الصغير' للابتكارات التقنية.",
-      firstJob: "الخطوات الأولى", firstJobDesc: "بدأ شغفي بالتكنولوجيا مبكراً جداً؛ حيث انطلقت في مجال صيانة الهواتف والتقنية منذ سن التاسعة.",
-      servicesHeading: "الخدمات الاحترافية", uiux: "تصميم واجهات المستخدم (UI/UX)", frontend: "تطوير الواجهات الأمامية (Frontend)", backend: "تطوير النظم النواة (Backend)", testing: "فحص الجودة (Testing)",
-      uiuxDesc: "أبتكر تصاميم عصرية وبديهية تضمن تجربة مستخدم سلسة وتترك انطباعاً راقياً ومميزاً.",
-      frontendDesc: "أقوم ببناء تطبيقات ويب ديناميكية وسريعة الاستجابة تواكب أحدث المعايير التقنية العالمية.",
-      backendDesc: "أطور قواعد بيانات وهيكليات خلفية شديدة الأمان لضمان عمل تطبيقاتك بثبات وقوة لاستيعاب الضغط المتزايد.",
-      testingDesc: "أخضع المشاريع لاختبارات دقيقة لمعالجة كافة الثغرات البرمجية وتقديم منتج نهائي متكامل وموثوق.",
-      contactHeading: "دعنا نصنع شيئاً عظيماً معاً", namePlaceholder: "الاسم الكريم", emailPlaceholder: "البريد الإلكتروني", messagePlaceholder: "رسالتك (اخبرني عن مشروعك..)", sendMessage: "إرسال الرسالة",
-      myWebsitesHeading: "معرض أعمالي ومشاريعي", viewProject: "عرض المشروع", faq: "الأسئلة الشائعة", aboutMe: "من أنا", copyright: "كافة الحقوق محفوظة © عبدالرحمن السيد"
+      home: "الرئيسية", education: "رحلتي التعليمية", services: "خدماتي", contact: "للتواصل", mywebsites: "مشاريعي",
+      hi: "أهلاً بك، أنا", name: "عبدالرحمن دوسر", iama: "أنا", social: "تابعني على",
+      homeDesc: "مطور برمجيات شامل وخبير في دمج الذكاء الاصطناعي. أصنع تجارب رقمية ذكية وعصرية تجمع بين التصميم المتميز والأداء القوي.",
+      hire: "اطلب خدماتي", contactme: "تواصل معي", educationHeading: "رحلة البحث والتعلم",
+      myWebsitesHeading: "معرض أعمالي", viewProject: "عرض المشروع", faq: "الأسئلة الشائعة", aboutMe: "من أنا", copyright: "عبدالرحمن دوسر | كافة الحقوق محفوظة",
+      skillsHeading: "مهاراتي التقنية", aiSpecialist: "خبير دمج تقنيات الذكاء الاصطناعي",
+      edu1Title: "أساسيات الويب من (الزيرو)", edu1Desc: "دراسة HTML و CSS و JS بأفضل الممارسات من مدرسة الزيرو الشهيرة.",
+      edu2Title: "البرمجة مع (كودزيلا)", edu2Desc: "تعلمت لغات Python و Java وقواعد المنطق البرمجي بأسلوب احترافي.",
+      edu3Title: "التقنيات الحديثة (Dave Gray)", edu3Desc: "تطوير متقدم باستخدام React و Next.js لبناء تطبيقات ويب ديناميكية.",
+      edu4Title: "تطوير مدعوم بالذكاء الاصطناعي", edu4Desc: "أمتلك خبرة كبيرة في استخدام ودمج الـ AI لتوفير حلول برمجية سريعة وذكية.",
+      uiux: "تصميم UI/UX", frontend: "تطوير الواجهات الأمامية", backend: "تطوير النظم الخلفية", testing: "فحص الجودة",
+      uiuxDesc: "تصميم واجهات عصرية، سهلة الاستخدام، وجذابة بصرياً.",
+      frontendDesc: "بناء مواقع سريعة ومتجاوبة باستخدام React و Next.js.",
+      backendDesc: "تطوير سيرفرات وقواعد بيانات قوية باستخدام Node.js.",
+      testingDesc: "التأكد من خلو الموقع من الأخطاء وعمله بكفاءة على كل الأجهزة.",
+      contactHeading: "دعنا نبدأ مشروعك الجديد", namePlaceholder: "اسمك الكريم", emailPlaceholder: "بريدك الإلكتروني", messagePlaceholder: "كيف يمكنني مساعدتك؟", sendMessage: "إرسال الرسالة"
     }
+  }
+
+  const texts = {
+    en: { ...defaultTexts.en, ...(adminData?.texts?.en || {}) },
+    ar: { ...defaultTexts.ar, ...(adminData?.texts?.ar || {}) }
   }
 
   const t = (key) => texts[lang][key] || key
@@ -276,8 +283,11 @@ export default function Home({ initialData }) {
     <section className="home" id="home">
         <div className="home-content">
             <h1>{t('hi')} <span>{t('name')}</span></h1>
-            <h3>{t('iama')} <span style={{color: 'var(--main-color)'}}>Developer</span></h3>
-            <p>{t('homeDesc')}</p>
+            <h3>{t('iama')} <span style={{color: 'var(--main-color)'}}>Full-Stack Developer</span></h3>
+            <div className="ai-badge">
+                <i className='bx bxs-bot'></i> {t('aiSpecialist')}
+            </div>
+            <p style={{marginTop: '2rem'}}>{t('homeDesc')}</p>
 
             <div className="social-icons">
                 <a href="https://wa.me/201151071517"><i className='bx bxl-whatsapp' ></i></a>
@@ -304,32 +314,32 @@ export default function Home({ initialData }) {
                 <div className="timeline-dot"></div>
                 <div className="timeline-date">2022</div>
                 <div className="timeline-content">
-                    <h3>{t('highSchool')}</h3>
-                    <p>{t('highSchoolDesc')}</p>
+                    <h3>{t('edu1Title')}</h3>
+                    <p>{t('edu1Desc')}</p>
                 </div>
             </div>
             <div className="timeline-item">
                 <div className="timeline-dot"></div>
                 <div className="timeline-date">2023</div>
                 <div className="timeline-content">
-                    <h3>{t('university')}</h3>
-                    <p>{t('universityDesc')}</p>
+                    <h3>{t('edu2Title')}</h3>
+                    <p>{t('edu2Desc')}</p>
                 </div>
             </div>
             <div className="timeline-item">
                 <div className="timeline-dot"></div>
                 <div className="timeline-date">2024</div>
                 <div className="timeline-content">
-                    <h3>{t('internship')}</h3>
-                    <p>{t('internshipDesc')}</p>
+                    <h3>{t('edu3Title')}</h3>
+                    <p>{t('edu3Desc')}</p>
                 </div>
             </div>
             <div className="timeline-item">
                 <div className="timeline-dot"></div>
                 <div className="timeline-date">2025</div>
                 <div className="timeline-content">
-                    <h3>{t('firstJob')}</h3>
-                    <p>{t('firstJobDesc')}</p>
+                    <h3>{t('edu4Title')}</h3>
+                    <p>{t('edu4Desc')}</p>
                 </div>
             </div>
         </div>
@@ -363,6 +373,46 @@ export default function Home({ initialData }) {
                     <h4>{t('testing')}</h4>
                     <p>{t('testingDesc')}</p>
                 </div>
+            </div>
+        </div>
+    </section>
+    )}
+
+    {sections.skills !== false && (
+    <section className="skills" id="skills" style={{background: 'var(--bg-color)'}}>
+        <h2 className="heading"><span>{t('skillsHeading')}</span></h2>
+        <div className="skills-grid">
+            <div className="skill-card">
+                <i className='bx bxl-react'></i>
+                <h5>React / Next.js</h5>
+            </div>
+            <div className="skill-card">
+                <i className='bx bxl-nodejs'></i>
+                <h5>Node.js</h5>
+            </div>
+            <div className="skill-card">
+                <i className='bx bxl-javascript'></i>
+                <h5>JavaScript (ES6+)</h5>
+            </div>
+            <div className="skill-card">
+                <i className='bx bxl-python'></i>
+                <h5>Python</h5>
+            </div>
+            <div className="skill-card">
+                <i className='bx bxl-java'></i>
+                <h5>Java</h5>
+            </div>
+            <div className="skill-card">
+                <i className='bx bxs-brain'></i>
+                <h5>AI / GPT Prompting</h5>
+            </div>
+            <div className="skill-card">
+                <i className='bx bxl-firebase'></i>
+                <h5>Firebase</h5>
+            </div>
+            <div className="skill-card">
+                <i className='bx bxl-tailwind-css'></i>
+                <h5>Modern Styling</h5>
             </div>
         </div>
     </section>
