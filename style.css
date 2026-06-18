@@ -306,7 +306,7 @@ section {
 
 .portfolio-img {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: auto;
     height: auto;
     overflow: hidden;
     position: relative;
@@ -317,13 +317,13 @@ section {
 
 @media (max-width: 768px) {
     .portfolio-img {
-        aspect-ratio: 4 / 3; /* Better for mobile screenshots */
+        aspect-ratio: auto; /* Let container determine size */
     }
 }
 
 @media (max-width: 480px) {
     .portfolio-img {
-        aspect-ratio: 1 / 1; /* Square on tiny phones for full visibility */
+        aspect-ratio: auto;
     }
 }
 
@@ -1120,7 +1120,7 @@ section {
 .carousel-container {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 350px;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.1);
 }
@@ -1139,23 +1139,42 @@ section {
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .carousel-slide img {
-    width: 100%;
+    width: auto;
     height: 100%;
+    max-width: 100%;
     object-fit: contain;
     display: block;
 }
 
-/* Mobile carousel optimization */
+/* Large screens */
+@media (min-width: 1200px) {
+    .carousel-container {
+        height: 400px;
+    }
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .carousel-container {
+        height: 350px;
+    }
+}
+
+/* Mobile optimization - shrink images to see full pictures */
 @media (max-width: 768px) {
     .carousel-container {
-        height: 250px; /* Reduced height on mobile */
+        height: 200px; /* Significantly smaller on mobile */
     }
     
     .carousel-slide img {
-        object-fit: cover; /* Fill container better on mobile */
+        width: auto;
+        height: auto;
+        max-height: 100%;
+        max-width: 100%;
     }
     
     .carousel-wrapper {
@@ -1163,9 +1182,15 @@ section {
     }
 }
 
+/* Small phones */
 @media (max-width: 480px) {
     .carousel-container {
-        height: 200px; /* Even smaller on tiny phones */
+        height: 150px; /* Very compact for tiny screens */
+    }
+    
+    .carousel-slide img {
+        max-height: 100%;
+        max-width: 90%;
     }
 }
 
@@ -1211,12 +1236,28 @@ section {
 
 /* Show carousel buttons on mobile touch */
 @media (max-width: 768px) {
-    .portfolio-card .carousel-btn {
+    .carousel-btn {
+        width: 2.8rem;
+        height: 2.8rem;
+        font-size: 1.4rem;
         opacity: 0.7; /* More visible on mobile */
+        left: 0.5rem;
+        right: 0.5rem;
     }
+    
+    .carousel-btn.prev { left: 0.5rem; }
+    .carousel-btn.next { right: 0.5rem; }
     
     .portfolio-card:hover .carousel-btn {
         opacity: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.2rem;
     }
 }
 
