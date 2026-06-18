@@ -8,55 +8,63 @@ export default function Admin() {
   const [saveStatus, setSaveStatus] = useState('') // '' | 'saving' | 'success' | 'error'
   const [editingTheme, setEditingTheme] = useState('dark')
   const [searchTerm, setSearchTerm] = useState('')
+  const [analytics, setAnalytics] = useState({ totalVisits: 0, todayVisits: 0, lastVisit: null, adminLogins: 0 })
   
   const [data, setData] = useState({
     colors: {
-      dark: { mainColor: '#00f0ff', bgColor: '#050505', secBgColor: '#111111', textColor: '#f0f0f0' },
-      light: { mainColor: '#0070f3', bgColor: '#f0f4f8', secBgColor: '#ffffff', textColor: '#1a202c' }
+      dark: { mainColor: '#00f0ff', bgColor: '#0a0a0a', secBgColor: '#1a1a1a', textColor: '#e8e8e8' },
+      light: { mainColor: '#0066ff', bgColor: '#f8f9fa', secBgColor: '#ffffff', textColor: '#2d3748' }
     },
     texts: {
       en: {
         home: "Home", education: "Learning Journey", services: "Services", contact: "Contact", mywebsites: "Projects",
         hi: "Hi, I'm", name: "Abdelrahman Doser", iama: "I'm a", social: "Find me on",
-        homeDesc: "Full-Stack Developer & AI Specialist. I build modern websites and integrated AI solutions.",
+        homeDesc: "Full-Stack Developer & AI Specialist. I build modern websites and integrated AI solutions for a smarter digital experience.",
         hire: "Hire Me", contactme: "Contact Me", educationHeading: "My Learning Path",
-        highSchool: "Web Fundamentals", highSchoolDesc: "Learned HTML, CSS, and JavaScript with best practices.",
-        university: "Modern Tech Stack", universityDesc: "Advanced learning in React, Next.js, and Node.js.",
-        internship: "Achievements", internshipDesc: "Awarded for technical innovation and excellence.",
-        firstJob: "AI Development", firstJobDesc: "Experienced in using and integrating AI solutions.",
-        servicesHeading: "Technical Skills", uiux: "UI/UX Design", frontend: "Frontend", backend: "Backend", testing: "QA Testing",
-        uiuxDesc: "Clean, modern, and user-friendly interfaces.",
-        frontendDesc: "Responsive web apps using React and Next.js.",
-        backendDesc: "Stable servers and databases with Node.js.",
-        testingDesc: "Works perfectly on all devices.",
-        contactHeading: "Let's Work Together", namePlaceholder: "Your Name", emailPlaceholder: "Your Email", messagePlaceholder: "Message", sendMessage: "Send",
-        myWebsitesHeading: "Featured Projects", viewProject: "View", faq: "FAQ", aboutMe: "About", copyright: "All Rights Reserved"
+        skillsHeading: "Technical Skills", aiSpecialist: "AI Integration Specialist",
+        edu1Title: "Web Fundamentals", edu1Desc: "Learned HTML, CSS, and JavaScript with the best practices from Elzero Web School.",
+        edu2Title: "Python & Java", edu2Desc: "Mastered programming logic and backend basics with Python and Java.",
+        edu3Title: "Modern Tech", edu3Desc: "Advanced learning in React, Next.js, and Node.js for building dynamic apps.",
+        edu4Title: "AI Development", edu4Desc: "Deeply experienced in using and integrating AI to solve coding challenges faster.",
+        uiux: "UI/UX Design", frontend: "Frontend Development", backend: "Backend Development", testing: "QA & Testing",
+        uiuxDesc: "Designing clean, modern, and user-friendly interfaces.",
+        frontendDesc: "Creating responsive web apps using React and Next.js.",
+        backendDesc: "Building stable servers and databases with Node.js.",
+        testingDesc: "Ensuring your website works perfectly on all devices.",
+        contactHeading: "Let's Work Together", namePlaceholder: "Your Name", emailPlaceholder: "Your Email", messagePlaceholder: "How can I help you?", sendMessage: "Send Message",
+        myWebsitesHeading: "Featured Projects", viewProject: "View Project", faq: "FAQ", aboutMe: "About Me", copyright: "Abdelrahman Doser | All Rights Reserved"
       },
       ar: {
         home: "الرئيسية", education: "رحلتي التعليمية", services: "خدماتي", contact: "للتواصل", mywebsites: "مشاريعي",
         hi: "أهلاً بك، أنا", name: "عبدالرحمن دوسر", iama: "أنا", social: "تابعني على",
-        homeDesc: "مطور برمجيات شامل وخبير في دمج الذكاء الاصطناعي.",
+        homeDesc: "مطور برمجيات شامل وخبير في دمج الذكاء الاصطناعي. أصنع تجارب رقمية ذكية وعصرية تجمع بين التصميم المتميز والأداء القوي.",
         hire: "اطلب خدماتي", contactme: "تواصل معي", educationHeading: "رحلة البحث والتعلم",
-        highSchool: "أساسيات الويب", highSchoolDesc: "دراسة HTML و CSS و JS بأفضل الممارسات.",
-        university: "التقنيات الحديثة", universityDesc: "تطوير متقدم باستخدام React و Next.js.",
-        internship: "الإنجازات", internshipDesc: "جوائز للابتكار التقني والتميز.",
-        firstJob: "تطوير الذكاء الاصطناعي", firstJobDesc: "خبرة في استخدام ودمج حلول الذكاء الاصطناعي.",
-        servicesHeading: "مهاراتي التقنية", uiux: "تصميم الواجهات", frontend: "الواجهات الأمامية", backend: "النظم الخلفية", testing: "فحص الجودة",
-        uiuxDesc: "واجهات عصرية وسهلة الاستخدام.",
-        frontendDesc: "تطبيقات ويب ديناميكية وسريعة.",
-        backendDesc: "سيرفرات وقواعد بيانات قوية.",
-        testingDesc: "يعمل بكفاءة على جميع الأجهزة.",
-        contactHeading: "دعنا نصنع شيئاً عظيماً", namePlaceholder: "اسمك", emailPlaceholder: "بريدك", messagePlaceholder: "رسالتك", sendMessage: "إرسال",
-        myWebsitesHeading: "معرض أعمالي", viewProject: "عرض", faq: "أسئلة", aboutMe: "عني", copyright: "جميع الحقوق محفوظة"
+        skillsHeading: "مهاراتي التقنية", aiSpecialist: "خبير دمج تقنيات الذكاء الاصطناعي",
+        edu1Title: "أساسيات الويب من (الزيرو)", edu1Desc: "دراسة HTML و CSS و JS بأفضل الممارسات من مدرسة الزيرو الشهيرة.",
+        edu2Title: "البرمجة مع (كودزيلا)", edu2Desc: "تعلمت لغات Python و Java وقواعد المنطق البرمجي بأسلوب احترافي.",
+        edu3Title: "التقنيات الحديثة (Dave Gray)", edu3Desc: "تطوير متقدم باستخدام React و Next.js لبناء تطبيقات ويب ديناميكية.",
+        edu4Title: "تطوير مدعوم بالذكاء الاصطناعي", edu4Desc: "أمتلك خبرة كبيرة في استخدام ودمج الـ AI لتوفير حلول برمجية سريعة وذكية.",
+        uiux: "تصميم UI/UX", frontend: "تطوير الواجهات الأمامية", backend: "تطوير النظم الخلفية", testing: "فحص الجودة",
+        uiuxDesc: "تصميم واجهات عصرية، سهلة الاستخدام، وجذابة بصرياً.",
+        frontendDesc: "بناء مواقع سريعة ومتجاوبة باستخدام React و Next.js.",
+        backendDesc: "تطوير سيرفرات وقواعد بيانات قوية باستخدام Node.js.",
+        testingDesc: "التأكد من خلو الموقع من الأخطاء وعمله بكفاءة على كل الأجهزة.",
+        contactHeading: "دعنا نبدأ مشروعك الجديد", namePlaceholder: "اسمك الكريم", emailPlaceholder: "بريدك الإلكتروني", messagePlaceholder: "كيف يمكنني مساعدتك؟", sendMessage: "إرسال الرسالة",
+        myWebsitesHeading: "معرض أعمالي", viewProject: "عرض المشروع", faq: "الأسئلة الشائعة", aboutMe: "من أنا", copyright: "عبدالرحمن دوسر | كافة الحقوق محفوظة"
       }
     },
-    sections: { home: true, education: true, services: true, contact: true, mywebsites: true, skills: true },
+    sections: { home: true, education: true, services: true, contact: true, mywebsites: true },
     images: { personal: '/personal.png', icon: '/icon.png' },
-    works: [ { id: Date.now(), title: 'Doser Hub', desc: 'A hub for easy browsing and resources.', url: 'https://doser-hub.vercel.app/', images: [] } ]
+    works: [ { id: Date.now(), title: 'Doser Hub - Easy Resource Browser', desc: 'A comprehensive hub for easy browsing and accessing resources.', url: 'https://doser-hub.vercel.app/', images: [] } ]
   })
 
   // Load data from Firebase
   useEffect(() => {
+    // Load analytics data
+    const savedAnalytics = JSON.parse(localStorage.getItem('adminAnalytics') || '{"totalVisits":0,"todayVisits":0,"lastVisit":null,"adminLogins":0}')
+    setAnalytics(savedAnalytics)
+
+    // Fetch portfolio data from Firebase
     fetch('https://doser-portfolio-default-rtdb.firebaseio.com/portfolioData.json')
       .then((res) => res.json())
       .then((dbData) => {
@@ -81,6 +89,14 @@ export default function Admin() {
       .catch((err) => console.error("Error loading DB:", err))
   }, [])
 
+  const logAdminLogin = () => {
+    const newAnalytics = JSON.parse(localStorage.getItem('adminAnalytics') || '{"totalVisits":0,"todayVisits":0,"lastVisit":null,"adminLogins":0}')
+    newAnalytics.adminLogins = (newAnalytics.adminLogins || 0) + 1
+    newAnalytics.lastVisit = new Date().toISOString()
+    localStorage.setItem('adminAnalytics', JSON.stringify(newAnalytics))
+    setAnalytics(newAnalytics)
+  }
+
   const handleLogin = async (e) => {
     e.preventDefault()
     try {
@@ -91,6 +107,7 @@ export default function Admin() {
       })
       if (res.ok) {
         setIsLoggedIn(true)
+        logAdminLogin()
         setSaveStatus('success')
         setTimeout(() => setSaveStatus(''), 2000)
       } else {
@@ -462,31 +479,59 @@ export default function Admin() {
         {/* Overview Tab */}
         {activeTab === 'overview' && (
           <div style={{ background: 'var(--glass-bg)', borderRadius: '1.5rem', padding: '2.5rem', border: '1px solid var(--glass-border)' }}>
-            <h2 style={{ marginBottom: '2rem', color: 'var(--text-color)', fontSize: '2.2rem' }}>📊 Dashboard Overview</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
-              <div style={{ background: 'rgba(0, 240, 255, 0.1)', padding: '2rem', borderRadius: '1rem', border: '1px solid var(--main-color)' }}>
-                <h3 style={{ color: 'var(--main-color)', marginBottom: '0.5rem', fontSize: '1.3rem' }}>📚 Total Projects</h3>
-                <p style={{ fontSize: '2.4rem', fontWeight: '700', color: 'var(--text-color)' }}>{data.works?.length || 0}</p>
+            <h2 style={{ marginBottom: '2.5rem', color: 'var(--text-color)', fontSize: '2.4rem', fontWeight: '700' }}>📊 Admin Dashboard</h2>
+            
+            {/* Analytics Cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+              <div style={{ background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(0, 240, 255, 0.05) 100%)', padding: '2rem', borderRadius: '1rem', border: '2px solid rgba(0, 240, 255, 0.3)' }}>
+                <h3 style={{ color: 'var(--main-color)', marginBottom: '0.5rem', fontSize: '1.1rem', marginTop: 0 }}>👤 Admin Logins</h3>
+                <p style={{ fontSize: '2.8rem', fontWeight: '700', color: 'var(--text-color)', margin: 0 }}>{analytics.adminLogins}</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.3rem' }}>Total access count</p>
               </div>
-              <div style={{ background: 'rgba(189, 0, 255, 0.1)', padding: '2rem', borderRadius: '1rem', border: '1px solid #bd00ff' }}>
-                <h3 style={{ color: '#bd00ff', marginBottom: '0.5rem', fontSize: '1.3rem' }}>🎨 Themes</h3>
-                <p style={{ fontSize: '2.4rem', fontWeight: '700', color: 'var(--text-color)' }}>2 (Dark/Light)</p>
+
+              <div style={{ background: 'linear-gradient(135deg, rgba(189, 0, 255, 0.1) 0%, rgba(189, 0, 255, 0.05) 100%)', padding: '2rem', borderRadius: '1rem', border: '2px solid rgba(189, 0, 255, 0.3)' }}>
+                <h3 style={{ color: '#bd00ff', marginBottom: '0.5rem', fontSize: '1.1rem', marginTop: 0 }}>📚 Projects</h3>
+                <p style={{ fontSize: '2.8rem', fontWeight: '700', color: 'var(--text-color)', margin: 0 }}>{data.works?.length || 0}</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.3rem' }}>Total portfolio items</p>
               </div>
-              <div style={{ background: 'rgba(52, 211, 153, 0.1)', padding: '2rem', borderRadius: '1rem', border: '1px solid #34d399' }}>
-                <h3 style={{ color: '#34d399', marginBottom: '0.5rem', fontSize: '1.3rem' }}>🗣️ Languages</h3>
-                <p style={{ fontSize: '2.4rem', fontWeight: '700', color: 'var(--text-color)' }}>2 (EN/AR)</p>
+
+              <div style={{ background: 'linear-gradient(135deg, rgba(52, 211, 153, 0.1) 0%, rgba(52, 211, 153, 0.05) 100%)', padding: '2rem', borderRadius: '1rem', border: '2px solid rgba(52, 211, 153, 0.3)' }}>
+                <h3 style={{ color: '#34d399', marginBottom: '0.5rem', fontSize: '1.1rem', marginTop: 0 }}>🗣️ Languages</h3>
+                <p style={{ fontSize: '2.8rem', fontWeight: '700', color: 'var(--text-color)', margin: 0 }}>2</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.3rem' }}>EN + AR Support</p>
+              </div>
+
+              <div style={{ background: 'linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%)', padding: '2rem', borderRadius: '1rem', border: '2px solid rgba(255, 193, 7, 0.3)' }}>
+                <h3 style={{ color: '#ffc107', marginBottom: '0.5rem', fontSize: '1.1rem', marginTop: 0 }}>🎨 Themes</h3>
+                <p style={{ fontSize: '2.8rem', fontWeight: '700', color: 'var(--text-color)', margin: 0 }}>2</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.3rem' }}>Dark + Light</p>
               </div>
             </div>
-            <div style={{ marginTop: '3rem', padding: '2rem', background: 'rgba(0, 0, 0, 0.1)', borderRadius: '1rem' }}>
-              <h3 style={{ marginBottom: '1rem', color: 'var(--text-color)', fontSize: '1.4rem' }}>✨ Quick Actions</h3>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '1rem', fontSize: '1.2rem' }}>Use the sidebar tabs to:</p>
-              <ul style={{ color: 'var(--text-muted)', paddingLeft: '2rem', fontSize: '1.2rem', lineHeight: '1.8' }}>
-                <li>🎨 Customize colors and themes</li>
-                <li>📝 Update all text content in English & Arabic</li>
-                <li>👁️ Toggle sections visibility</li>
-                <li>🖼️ Manage personal images</li>
-                <li>🚀 Add and manage projects</li>
-              </ul>
+
+            {/* Last Login Info */}
+            {analytics.lastVisit && (
+              <div style={{ background: 'rgba(0, 0, 0, 0.15)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--glass-border)', marginBottom: '2rem' }}>
+                <p style={{ margin: 0, color: 'var(--text-color)', fontSize: '1.1rem' }}>
+                  ⏱️ Last Access: <strong>{new Date(analytics.lastVisit).toLocaleString()}</strong>
+                </p>
+              </div>
+            )}
+
+            {/* Features Info */}
+            <div style={{ background: 'rgba(0, 0, 0, 0.1)', padding: '2rem', borderRadius: '1rem' }}>
+              <h3 style={{ marginBottom: '1.2rem', color: 'var(--text-color)', fontSize: '1.5rem' }}>✨ Available Features</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+                <div style={{ paddingLeft: '2rem' }}>
+                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>🎨 Customize Dark & Light themes</p>
+                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>📝 Edit English & Arabic content</p>
+                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>👁️ Toggle sections visibility</p>
+                </div>
+                <div style={{ paddingLeft: '2rem' }}>
+                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>🖼️ Manage personal images</p>
+                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>🚀 Add & manage projects</p>
+                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>📥📤 Backup & restore data</p>
+                </div>
+              </div>
             </div>
           </div>
         )}
