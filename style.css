@@ -289,12 +289,19 @@ section {
     display: flex;
     flex-direction: column;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    height: 100%;
 }
 
 .portfolio-card:hover {
     transform: translateY(-10px);
     border-color: var(--main-color);
     box-shadow: 0 20px 40px rgba(0, 240, 255, 0.15);
+}
+
+@media (max-width: 768px) {
+    .portfolio-card:hover {
+        transform: translateY(-5px); /* Smaller lift on mobile */
+    }
 }
 
 .portfolio-img {
@@ -304,7 +311,8 @@ section {
     overflow: hidden;
     position: relative;
     border-bottom: 1px solid var(--glass-border);
-    background: rgba(0, 0, 0, 0.2); 
+    background: rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
 }
 
 @media (max-width: 768px) {
@@ -313,15 +321,28 @@ section {
     }
 }
 
+@media (max-width: 480px) {
+    .portfolio-img {
+        aspect-ratio: 1 / 1; /* Square on tiny phones for full visibility */
+    }
+}
+
 .portfolio-img img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     transition: transform 0.6s ease;
+    display: block;
 }
 
 .portfolio-card:hover .portfolio-img img {
-    transform: scale(1.1);
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .portfolio-card:hover .portfolio-img img {
+        transform: scale(1.02); /* Subtle zoom on mobile */
+    }
 }
 
 .portfolio-fallback {
@@ -1101,33 +1122,60 @@ section {
     width: 100%;
     height: 100%;
     overflow: hidden;
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .carousel-wrapper {
     display: flex;
     height: 100%;
     transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
 }
 
 .carousel-slide {
     min-width: 100%;
     height: 100%;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .carousel-slide img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    display: block;
+}
+
+/* Mobile carousel optimization */
+@media (max-width: 768px) {
+    .carousel-container {
+        height: 250px; /* Reduced height on mobile */
+    }
+    
+    .carousel-slide img {
+        object-fit: cover; /* Fill container better on mobile */
+    }
+    
+    .carousel-wrapper {
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+@media (max-width: 480px) {
+    .carousel-container {
+        height: 200px; /* Even smaller on tiny phones */
+    }
 }
 
 .carousel-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     color: white;
     width: 3.5rem;
     height: 3.5rem;
@@ -1140,6 +1188,7 @@ section {
     font-size: 1.8rem;
     opacity: 0;
     transition: all 0.3s ease;
+    user-select: none;
 }
 
 .portfolio-card:hover .carousel-btn {
@@ -1150,32 +1199,69 @@ section {
     background: var(--main-color);
     color: var(--bg-color);
     box-shadow: 0 0 15px var(--main-color);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn:active {
+    transform: translateY(-50%) scale(0.95);
 }
 
 .carousel-btn.prev { left: 1rem; }
 .carousel-btn.next { right: 1rem; }
 
+/* Show carousel buttons on mobile touch */
+@media (max-width: 768px) {
+    .portfolio-card .carousel-btn {
+        opacity: 0.7; /* More visible on mobile */
+    }
+    
+    .portfolio-card:hover .carousel-btn {
+        opacity: 1;
+    }
+}
+
 .carousel-dots {
     position: absolute;
-    bottom: 1.5rem;
+    bottom: 1rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 0.8rem;
     z-index: 10;
+    flex-wrap: wrap;
+    max-width: 90%;
+    justify-content: center;
 }
 
 .carousel-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.4);
     cursor: pointer;
     transition: all 0.3s ease;
+    user-select: none;
+}
+
+.carousel-dot:hover {
+    background: rgba(255, 255, 255, 0.7);
 }
 
 .carousel-dot.active {
     background: var(--main-color);
     width: 20px;
     border-radius: 4px;
+    box-shadow: 0 0 10px var(--main-color);
+}
+
+/* Smaller dots on mobile */
+@media (max-width: 480px) {
+    .carousel-dot {
+        width: 6px;
+        height: 6px;
+    }
+    
+    .carousel-dot.active {
+        width: 16px;
+    }
 }

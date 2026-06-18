@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 
 function ProjectCarousel({ images }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
 
   useEffect(() => {
     if (!images || images.length <= 1) return;
@@ -31,15 +33,39 @@ function ProjectCarousel({ images }) {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
+  // Touch gesture support for mobile
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    setTouchEnd(e.changedTouches[0].clientX);
+    handleSwipe();
+  };
+
+  const handleSwipe = () => {
+    if (touchStart - touchEnd > 50) {
+      // Swipe left, go to next slide
+      nextSlide();
+    } else if (touchEnd - touchStart > 50) {
+      // Swipe right, go to prev slide
+      prevSlide();
+    }
+  };
+
   return (
-    <div className="carousel-container">
+    <div 
+      className="carousel-container"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div 
         className="carousel-wrapper" 
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {images.map((img, idx) => (
           <div key={idx} className="carousel-slide">
-            <img src={img} alt={`Slide ${idx}`} />
+            <img src={img} alt={`Slide ${idx}`} loading="lazy" />
           </div>
         ))}
       </div>
