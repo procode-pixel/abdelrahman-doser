@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /doser-secret-panel
 
-Sitemap: https://itsmedoser.vercel.app/sitemap.xml
+Sitemap: https://abdelrahman-doser.vercel.app/sitemap.xml

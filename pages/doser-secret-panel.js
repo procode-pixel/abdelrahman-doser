@@ -57,7 +57,23 @@ export default function Admin() {
       .then((res) => res.json())
       .then((dbData) => {
         if (dbData) {
-          setData(dbData)
+          // Normalize works to a valid array
+          let safeWorks = [];
+          if (dbData.works) {
+            safeWorks = Array.isArray(dbData.works) 
+              ? dbData.works.filter(Boolean)
+              : Object.values(dbData.works).filter(Boolean);
+          }
+          
+          setData(prev => ({
+            ...prev,
+            ...dbData,
+            colors: dbData.colors || prev.colors,
+            texts: dbData.texts || prev.texts,
+            sections: dbData.sections || prev.sections,
+            images: dbData.images || prev.images,
+            works: safeWorks
+          }))
         } else {
           const saved = localStorage.getItem('portfolioDataV5')
           if (saved) setData(JSON.parse(saved))
@@ -144,7 +160,7 @@ export default function Admin() {
 
   const addWork = () => {
     const newWork = { id: Date.now(), title: '', desc: '', url: '', images: [] }
-    setData(prev => ({ ...prev, works: [...prev.works, newWork] }))
+    setData(prev => ({ ...prev, works: [...(prev.works || []), newWork] }))
   }
 
   const handleWorkImageUpload = (e, id) => {
@@ -165,7 +181,7 @@ export default function Admin() {
   const addWorkImage = (id, imageUrl) => {
     setData(prev => ({
       ...prev,
-      works: prev.works.map(w => w.id === id ? { 
+      works: (prev.works || []).map(w => w.id === id ? { 
         ...w, 
         images: [...(w.images || (w.image ? [w.image] : [])), imageUrl],
         image: '' // Clear legacy single image field
@@ -176,7 +192,7 @@ export default function Admin() {
   const removeWorkImage = (id, index) => {
     setData(prev => ({
       ...prev,
-      works: prev.works.map(w => w.id === id ? { 
+      works: (prev.works || []).map(w => w.id === id ? { 
         ...w, 
         images: (w.images || []).filter((_, i) => i !== index)
       } : w)
@@ -186,12 +202,12 @@ export default function Admin() {
   const updateWork = (id, field, value) => {
     setData(prev => ({
       ...prev,
-      works: prev.works.map(w => w.id === id ? { ...w, [field]: value } : w)
+      works: (prev.works || []).map(w => w.id === id ? { ...w, [field]: value } : w)
     }))
   }
 
   const deleteWork = (id) => {
-    setData(prev => ({ ...prev, works: prev.works.filter(w => w.id !== id) }))
+    setData(prev => ({ ...prev, works: (prev.works || []).filter(w => w.id !== id) }))
   }
 
   if (!isLoggedIn) {
@@ -376,7 +392,7 @@ export default function Admin() {
               <button onClick={addWork} className="btn" style={{padding: '0.8rem 2rem'}}>+ Add New</button>
             </div>
             
-            {data.works.map((work, index) => (
+            {(data.works || []).map((work, index) => (
               <div key={work.id} className="work-item">
                 <button className="delete-btn" onClick={() => deleteWork(work.id)}>Delete</button>
                 <div style={{marginBottom: '1rem', fontWeight: 'bold', color: 'var(--main-color)'}}>Project #{index + 1}</div>

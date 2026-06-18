@@ -120,12 +120,17 @@ export default function Home({ initialData }) {
   }
 
   const sections = adminData?.sections || { home: true, education: true, services: true, contact: true, mywebsites: true }
-  const colors = {
+  const defaultColors = {
     dark: { mainColor: '#00f0ff', bgColor: '#050505', secBgColor: '#111111', textColor: '#f0f0f0' },
     light: { mainColor: '#0070f3', bgColor: '#f0f4f8', secBgColor: '#ffffff', textColor: '#1a202c' }
   }
+  const colors = adminData?.colors || defaultColors;
   const images = adminData?.images || { personal: '/personal.png', icon: '/icon.png' }
-  const works = adminData?.works || [
+  
+  const rawWorks = adminData?.works;
+  const works = rawWorks 
+    ? (Array.isArray(rawWorks) ? rawWorks.filter(Boolean) : Object.values(rawWorks).filter(Boolean)) 
+    : [
     { id: 1, title: 'Doser hub for easy Browse', desc: 'A hub for easy browsing and resources.', url: 'https://doser-hub.vercel.app/' }
   ]
 
@@ -137,9 +142,9 @@ export default function Home({ initialData }) {
       hire: "Hire Me", contactme: "Contact Me", educationHeading: "My Learning Path",
       myWebsitesHeading: "Featured Projects", viewProject: "View Project", faq: "FAQ", aboutMe: "About Me", copyright: "Abdelrahman Doser | All Rights Reserved",
       skillsHeading: "Technical Skills", aiSpecialist: "AI Integration Specialist",
-      edu1Title: "Web Fundamentals (Elzero)", edu1Desc: "Learned HTML, CSS, and JavaScript with the best practices from Elzero Web School.",
-      edu2Title: "Python & Java (Codezilla)", edu2Desc: "Mastered programming logic and backend basics with Python and Java.",
-      edu3Title: "Modern Tech (Dave Gray & Others)", edu3Desc: "Advanced learning in React, Next.js, and Node.js for building dynamic apps.",
+      edu1Title: "Web Fundamentals", edu1Desc: "Learned HTML, CSS, and JavaScript with the best practices from Elzero Web School.",
+      edu2Title: "Python & Java", edu2Desc: "Mastered programming logic and backend basics with Python and Java.",
+      edu3Title: "Modern Tech", edu3Desc: "Advanced learning in React, Next.js, and Node.js for building dynamic apps.",
       edu4Title: "AI Development", edu4Desc: "Deeply experienced in using and integrating AI to solve coding challenges faster.",
       uiux: "UI/UX Design", frontend: "Frontend Development", backend: "Backend Development", testing: "QA & Testing",
       uiuxDesc: "Designing clean, modern, and user-friendly interfaces.",
@@ -197,7 +202,7 @@ export default function Home({ initialData }) {
   }, [colors, themeMode])
 
   // Advanced SEO & Social Sharing Optimization
-  const siteUrl = "https://itsmedoser.vercel.app";
+  const siteUrl = "https://abdelrahman-doser.vercel.app";
   const absoluteFullImg = `${siteUrl}${images.personal}`;
 
   return (
