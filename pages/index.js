@@ -145,12 +145,33 @@ export default function Home({ initialData }) {
     localStorage.setItem('portfolioTheme', nextTheme)
   }
 
-  const sections = adminData?.sections || { home: true, education: true, services: true, contact: true, mywebsites: true }
-  const defaultColors = {
-    dark: { mainColor: '#00f0ff', bgColor: '#050505', secBgColor: '#111111', textColor: '#f0f0f0' },
-    light: { mainColor: '#0070f3', bgColor: '#f0f4f8', secBgColor: '#ffffff', textColor: '#1a202c' }
+  const trackVisit = async (projectId = null) => {
+    try {
+      await fetch('/api/visit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId })
+      })
+    } catch (e) {
+      console.error("Tracking failed", e)
+    }
   }
-  const colors = adminData?.colors || defaultColors;
+
+  React.useEffect(() => {
+    trackVisit()
+  }, [])
+
+  const sections = adminData?.sections || { home: true, education: true, services: true, contact: true, mywebsites: true }
+  const colors = {
+    dark: { 
+      mainColor: '#00f0ff', bgColor: '#050505', secBgColor: '#111111', textColor: '#f0f0f0', textMuted: '#a0a0a0',
+      ...(adminData?.colors?.dark || {})
+    },
+    light: { 
+      mainColor: '#0066ff', bgColor: '#f8f9fa', secBgColor: '#ffffff', textColor: '#2d3748', textMuted: '#4a5568',
+      ...(adminData?.colors?.light || {})
+    }
+  }
   const images = adminData?.images || { personal: '/personal.png', icon: '/icon.png' }
   
   const rawWorks = adminData?.works;
@@ -211,6 +232,7 @@ export default function Home({ initialData }) {
     document.documentElement.style.setProperty('--bg-color', currentColors.bgColor)
     document.documentElement.style.setProperty('--sec-bg-color', currentColors.secBgColor)
     document.documentElement.style.setProperty('--text-color', currentColors.textColor)
+    document.documentElement.style.setProperty('--text-muted', currentColors.textMuted)
     document.documentElement.style.setProperty('--main-color', currentColors.mainColor)
     
     // Setup some adaptive glassmorphism settings based on theme
@@ -218,14 +240,13 @@ export default function Home({ initialData }) {
       document.documentElement.style.setProperty('--glass-bg', 'rgba(255, 255, 255, 0.6)');
       document.documentElement.style.setProperty('--glass-border', 'rgba(0, 0, 0, 0.05)');
       document.documentElement.style.setProperty('--glass-shadow', '0 8px 32px 0 rgba(0, 0, 0, 0.1)');
-      document.documentElement.style.setProperty('--text-muted', '#4a5568');
     } else {
       document.documentElement.style.setProperty('--glass-bg', 'rgba(20, 20, 20, 0.4)');
       document.documentElement.style.setProperty('--glass-border', 'rgba(255, 255, 255, 0.05)');
       document.documentElement.style.setProperty('--glass-shadow', '0 8px 32px 0 rgba(0, 0, 0, 0.37)');
-      document.documentElement.style.setProperty('--text-muted', '#a0a0a0');
     }
   }, [colors, themeMode])
+
 
   // Advanced SEO & Social Sharing Optimization
   const siteUrl = "https://abdelrahman-doser.vercel.app";
@@ -471,7 +492,7 @@ export default function Home({ initialData }) {
                         <div className="portfolio-info">
                             <h3>{work.title}</h3>
                             <p>{work.desc}</p>
-                            <a href={work.url} target="_blank" rel="noreferrer" className="btn-view">
+                            <a href={work.url} target="_blank" rel="noreferrer" className="btn-view" onClick={() => trackVisit(work.id)}>
                                 {t('viewProject')} <i className='bx bx-right-top-arrow-circle' style={{marginLeft: '8px'}}></i>
                             </a>
                         </div>

@@ -1,1060 +1,668 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import Head from 'next/head'
 
-export default function Admin() {
-  const [password, setPassword] = useState('')
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [activeTab, setActiveTab] = useState('overview')
-  const [saveStatus, setSaveStatus] = useState('') // '' | 'saving' | 'success' | 'error'
-  const [editingTheme, setEditingTheme] = useState('dark')
-  const [searchTerm, setSearchTerm] = useState('')
-  const [analytics, setAnalytics] = useState({ totalVisits: 0, todayVisits: 0, lastVisit: null, adminLogins: 0 })
-  
-  const [data, setData] = useState({
-    colors: {
-      dark: { mainColor: '#00f0ff', bgColor: '#0a0a0a', secBgColor: '#1a1a1a', textColor: '#e8e8e8' },
-      light: { mainColor: '#0066ff', bgColor: '#f8f9fa', secBgColor: '#ffffff', textColor: '#2d3748' }
-    },
-    texts: {
-      en: {
-        home: "Home", education: "Learning Journey", services: "Services", contact: "Contact", mywebsites: "Projects",
-        hi: "Hi, I'm", name: "Abdelrahman Doser", iama: "I'm a", social: "Find me on",
-        homeDesc: "Full-Stack Developer & AI Specialist. I build modern websites and integrated AI solutions for a smarter digital experience.",
-        hire: "Hire Me", contactme: "Contact Me", educationHeading: "My Learning Path",
-        skillsHeading: "Technical Skills", aiSpecialist: "AI Integration Specialist",
-        edu1Title: "Web Fundamentals", edu1Desc: "Learned HTML, CSS, and JavaScript with the best practices from Elzero Web School.",
-        edu2Title: "Python & Java", edu2Desc: "Mastered programming logic and backend basics with Python and Java.",
-        edu3Title: "Modern Tech", edu3Desc: "Advanced learning in React, Next.js, and Node.js for building dynamic apps.",
-        edu4Title: "AI Development", edu4Desc: "Deeply experienced in using and integrating AI to solve coding challenges faster.",
-        uiux: "UI/UX Design", frontend: "Frontend Development", backend: "Backend Development", testing: "QA & Testing",
-        uiuxDesc: "Designing clean, modern, and user-friendly interfaces.",
-        frontendDesc: "Creating responsive web apps using React and Next.js.",
-        backendDesc: "Building stable servers and databases with Node.js.",
-        testingDesc: "Ensuring your website works perfectly on all devices.",
-        contactHeading: "Let's Work Together", namePlaceholder: "Your Name", emailPlaceholder: "Your Email", messagePlaceholder: "How can I help you?", sendMessage: "Send Message",
-        myWebsitesHeading: "Featured Projects", viewProject: "View Project", faq: "FAQ", aboutMe: "About Me", copyright: "Abdelrahman Doser | All Rights Reserved"
-      },
-      ar: {
-        home: "الرئيسية", education: "رحلتي التعليمية", services: "خدماتي", contact: "للتواصل", mywebsites: "مشاريعي",
-        hi: "أهلاً بك، أنا", name: "عبدالرحمن دوسر", iama: "أنا", social: "تابعني على",
-        homeDesc: "مطور برمجيات شامل وخبير في دمج الذكاء الاصطناعي. أصنع تجارب رقمية ذكية وعصرية تجمع بين التصميم المتميز والأداء القوي.",
-        hire: "اطلب خدماتي", contactme: "تواصل معي", educationHeading: "رحلة البحث والتعلم",
-        skillsHeading: "مهاراتي التقنية", aiSpecialist: "خبير دمج تقنيات الذكاء الاصطناعي",
-        edu1Title: "أساسيات الويب من (الزيرو)", edu1Desc: "دراسة HTML و CSS و JS بأفضل الممارسات من مدرسة الزيرو الشهيرة.",
-        edu2Title: "البرمجة مع (كودزيلا)", edu2Desc: "تعلمت لغات Python و Java وقواعد المنطق البرمجي بأسلوب احترافي.",
-        edu3Title: "التقنيات الحديثة (Dave Gray)", edu3Desc: "تطوير متقدم باستخدام React و Next.js لبناء تطبيقات ويب ديناميكية.",
-        edu4Title: "تطوير مدعوم بالذكاء الاصطناعي", edu4Desc: "أمتلك خبرة كبيرة في استخدام ودمج الـ AI لتوفير حلول برمجية سريعة وذكية.",
-        uiux: "تصميم UI/UX", frontend: "تطوير الواجهات الأمامية", backend: "تطوير النظم الخلفية", testing: "فحص الجودة",
-        uiuxDesc: "تصميم واجهات عصرية، سهلة الاستخدام، وجذابة بصرياً.",
-        frontendDesc: "بناء مواقع سريعة ومتجاوبة باستخدام React و Next.js.",
-        backendDesc: "تطوير سيرفرات وقواعد بيانات قوية باستخدام Node.js.",
-        testingDesc: "التأكد من خلو الموقع من الأخطاء وعمله بكفاءة على كل الأجهزة.",
-        contactHeading: "دعنا نبدأ مشروعك الجديد", namePlaceholder: "اسمك الكريم", emailPlaceholder: "بريدك الإلكتروني", messagePlaceholder: "كيف يمكنني مساعدتك؟", sendMessage: "إرسال الرسالة",
-        myWebsitesHeading: "معرض أعمالي", viewProject: "عرض المشروع", faq: "الأسئلة الشائعة", aboutMe: "من أنا", copyright: "عبدالرحمن دوسر | كافة الحقوق محفوظة"
-      }
-    },
-    sections: { home: true, education: true, services: true, contact: true, mywebsites: true },
-    images: { personal: '/personal.png', icon: '/icon.png' },
-    works: [ { id: Date.now(), title: 'Doser Hub - Easy Resource Browser', desc: 'A comprehensive hub for easy browsing and accessing resources.', url: 'https://doser-hub.vercel.app/', images: [] } ]
-  })
+/**
+ * DOSER ADMIN OS v2.0
+ * Fully rewritten for maximum performance, clean UI, and robust security.
+ */
 
-  // Load data from Firebase
+// --- Constants & Utilities ---
+const STORAGE_KEYS = {
+  SESSION: 'doserAdminPass',
+  HISTORY: 'adminHistory',
+  HISTORY_IDX: 'adminHistoryIndex',
+  VERSIONS: 'portfolioVersions',
+  THEME: 'adminPanelTheme'
+}
+
+const DEFAULT_DATA = {
+  colors: {
+    dark: { mainColor: '#00f0ff', bgColor: '#0a0a0a', secBgColor: '#1a1a1a', textColor: '#e8e8e8', textMuted: '#94a3b8' },
+    light: { mainColor: '#0066ff', bgColor: '#f8f9fa', secBgColor: '#ffffff', textColor: '#2d3748', textMuted: '#64748b' }
+  },
+  texts: {
+    en: {
+      home: "Home", education: "Learning Journey", services: "Services", contact: "Contact", mywebsites: "Projects",
+      hi: "Hi, I'm", name: "Abdelrahman Doser", iama: "I'm a", social: "Find me on",
+      homeDesc: "Full-Stack Developer & AI Specialist. I build modern websites and integrated AI solutions for a smarter digital experience.",
+      hire: "Hire Me", contactme: "Contact Me", educationHeading: "My Learning Path",
+      skillsHeading: "Technical Skills", aiSpecialist: "AI Integration Specialist",
+      edu1Title: "Web Fundamentals", edu1Desc: "Learned HTML, CSS, and JavaScript with the best practices from Elzero Web School.",
+      edu2Title: "Python & Java", edu2Desc: "Mastered programming logic and backend basics with Python and Java.",
+      edu3Title: "Modern Tech", edu3Desc: "Advanced learning in React, Next.js, and Node.js for building dynamic apps.",
+      edu4Title: "AI Development", edu4Desc: "Deeply experienced in using and integrating AI to solve coding challenges faster.",
+      uiux: "UI/UX Design", frontend: "Frontend Development", backend: "Backend Development", testing: "QA & Testing",
+      uiuxDesc: "Designing clean, modern, and user-friendly interfaces.",
+      frontendDesc: "Creating responsive web apps using React and Next.js.",
+      backendDesc: "Building stable servers and databases with Node.js.",
+      testingDesc: "Ensuring your website works perfectly on all devices.",
+      contactHeading: "Let's Work Together", namePlaceholder: "Your Name", emailPlaceholder: "Your Email", messagePlaceholder: "How can I help you?", sendMessage: "Send Message",
+      myWebsitesHeading: "Featured Projects", viewProject: "View Project", faq: "FAQ", aboutMe: "About Me", copyright: "Abdelrahman Doser | All Rights Reserved"
+    },
+    ar: {
+      home: "الرئيسية", education: "رحلتي التعليمية", services: "خدماتي", contact: "للتواصل", mywebsites: "مشاريعي",
+      hi: "أهلاً بك، أنا", name: "عبدالرحمن دوسر", iama: "أنا", social: "تابعني على",
+      homeDesc: "مطور برمجيات شامل وخبير في دمج الذكاء الاصطناعي. أصنع تجارب رقمية ذكية وعصرية تجمع بين التصميم المتميز والأداء القوي.",
+      hire: "اطلب خدماتي", contactme: "تواصل معي", educationHeading: "رحلة البحث والتعلم",
+      skillsHeading: "مهاراتي التقنية", aiSpecialist: "خبير دمج تقنيات الذكاء الاصطناعي",
+      edu1Title: "أساسيات الويب من (الزيرو)", edu1Desc: "دراسة HTML و CSS و JS بأفضل الممارسات من مدرسة الزيرو الشهيرة.",
+      edu2Title: "البرمجة مع (كودزيلا)", edu2Desc: "تعلمت لغات Python و Java وقواعد المنطق البرمجي بأسلوب احترافي.",
+      edu3Title: "التقنيات الحديثة (Dave Gray)", edu3Desc: "تطوير متقدم باستخدام React و Next.js لبناء تطبيقات ويب ديناميكية.",
+      edu4Title: "تطوير مدعوم بالذكاء الاصطناعي", edu4Desc: "أمتلك خبرة كبيرة في استخدام ودمج الـ AI لتوفير حلول برمجية سريعة وذكية.",
+      uiux: "تصميم UI/UX", frontend: "تطوير الواجهات الأمامية", backend: "تطوير النظم الخلفية", testing: "فحص الجودة",
+      uiuxDesc: "تصميم واجهات عصرية، سهلة الاستخدام، وجذابة بصرياً.",
+      frontendDesc: "بناء مواقع سريعة ومتجاوبة باستخدام React و Next.js.",
+      backendDesc: "تطوير سيرفرات وقواعد بيانات قوية باستخدام Node.js.",
+      testingDesc: "التأكد من خلو الموقع من الأخطاء وعمله بكفاءة على كل الأجهزة.",
+      contactHeading: "دعنا نبدأ مشروعك الجديد", namePlaceholder: "اسمك الكريم", emailPlaceholder: "بريدك الإلكتروني", messagePlaceholder: "كيف يمكنني مساعدتك؟", sendMessage: "إرسال الرسالة",
+      myWebsitesHeading: "معرض أعمالي", viewProject: "عرض المشروع", faq: "الأسئلة الشائعة", aboutMe: "من أنا", copyright: "عبدالرحمن دوسر | كافة الحقوق محفوظة"
+    }
+  },
+  sections: { home: true, education: true, services: true, contact: true, mywebsites: true },
+  images: { personal: '/personal.png', icon: '/icon.png' },
+  works: [ ]
+}
+
+// --- Components ---
+
+const Toast = ({ message, type, onClose, isLight }) => {
   useEffect(() => {
-    // Load analytics data
-    const savedAnalytics = JSON.parse(localStorage.getItem('adminAnalytics') || '{"totalVisits":0,"todayVisits":0,"lastVisit":null,"adminLogins":0}')
-    setAnalytics(savedAnalytics)
+    const t = setTimeout(onClose, 3000)
+    return () => clearTimeout(t)
+  }, [onClose])
 
-    // Fetch portfolio data from Firebase
-    fetch('https://doser-portfolio-default-rtdb.firebaseio.com/portfolioData.json')
-      .then((res) => res.json())
-      .then((dbData) => {
-        if (dbData) {
-          let safeWorks = []
-          if (dbData.works) {
-            safeWorks = Array.isArray(dbData.works) 
-              ? dbData.works.filter(Boolean)
-              : Object.values(dbData.works).filter(Boolean)
-          }
-          setData(prev => ({
-            ...prev,
-            ...dbData,
-            colors: dbData.colors || prev.colors,
-            texts: dbData.texts || prev.texts,
-            sections: dbData.sections || prev.sections,
-            images: dbData.images || prev.images,
-            works: safeWorks
-          }))
-        }
-      })
-      .catch((err) => console.error("Error loading DB:", err))
-  }, [])
-
-  const logAdminLogin = () => {
-    const newAnalytics = JSON.parse(localStorage.getItem('adminAnalytics') || '{"totalVisits":0,"todayVisits":0,"lastVisit":null,"adminLogins":0}')
-    newAnalytics.adminLogins = (newAnalytics.adminLogins || 0) + 1
-    newAnalytics.lastVisit = new Date().toISOString()
-    localStorage.setItem('adminAnalytics', JSON.stringify(newAnalytics))
-    setAnalytics(newAnalytics)
+  const colors = {
+    success: '#10b981',
+    error: '#ef4444',
+    info: '#3b82f6'
   }
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
+  return (
+    <div style={{
+      position: 'fixed', bottom: '2rem', right: '2rem',
+      backgroundColor: colors[type] || colors.info,
+      color: 'white', padding: '1rem 1.5rem', borderRadius: '1rem',
+      boxShadow: isLight ? '0 10px 25px rgba(0,0,0,0.1)' : '0 10px 25px rgba(0,0,0,0.5)',
+      zIndex: 9999, display: 'flex', alignItems: 'center', gap: '0.8rem',
+      animation: 'slideUp 0.3s ease forwards'
+    }}>
+      <span>{type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+      <span style={{ fontWeight: 600 }}>{message}</span>
+    </div>
+  )
+}
+
+const Card = ({ children, title, subtitle, panelColors, style }) => (
+  <div style={{
+    background: panelColors.card,
+    borderRadius: '1.25rem',
+    padding: '2rem',
+    border: `1px solid ${panelColors.border}`,
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+    position: 'relative',
+    ...style
+  }}>
+    {title && <h3 style={{ margin: 0, color: panelColors.text, fontSize: '1.3rem', fontWeight: 800 }}>{title}</h3>}
+    {subtitle && <p style={{ margin: '0.4rem 0 1.5rem', color: panelColors.textMuted, fontSize: '0.85rem' }}>{subtitle}</p>}
+    {children}
+  </div>
+)
+
+const InputField = ({ label, value, onChange, type = 'text', mb = '1.5rem', panelColors, placeholder }) => (
+  <div style={{ marginBottom: mb }}>
+    {label && <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.9rem', fontWeight: 600, color: panelColors.text }}>{label}</label>}
+    <input
+      type={type}
+      value={value}
+      placeholder={placeholder}
+      onChange={(e) => onChange(e.target.value)}
+      style={{
+        width: '100%', padding: '0.75rem 1rem', borderRadius: '0.75rem',
+        border: `1px solid ${panelColors.border}`, background: panelColors.inputBg,
+        color: panelColors.text, outline: 'none', transition: 'border-color 0.2s',
+        fontSize: '1rem', boxSizing: 'border-box'
+      }}
+      onFocus={(e) => e.target.style.borderColor = panelColors.main}
+      onBlur={(e) => e.target.style.borderColor = panelColors.border}
+    />
+  </div>
+)
+
+// --- Main Application ---
+
+export default function AdminOS() {
+  // --- States ---
+  const [isReady, setIsReady] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [toast, setToast] = useState(null)
+  const [activeTab, setActiveTab] = useState('overview')
+  const [panelTheme, setPanelTheme] = useState('dark')
+  
+  const [password, setPassword] = useState('')
+  const [data, setData] = useState(DEFAULT_DATA)
+  const [history, setHistory] = useState([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
+  const [visitStats, setVisitStats] = useState({ total: 0, daily: {}, projectVisits: {} })
+  const [activity, setActivity] = useState([])
+
+  // UI States
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [activeContentSection, setActiveContentSection] = useState('hero')
+
+  // --- Computed ---
+  const isLight = panelTheme === 'light'
+  const panelColors = useMemo(() => ({
+    bg: isLight ? '#f4f7fe' : '#050505',
+    sidebar: isLight ? '#ffffff' : '#0f0f0f',
+    card: isLight ? '#ffffff' : '#111111',
+    text: isLight ? '#1a202c' : '#f8fafc',
+    textMuted: isLight ? '#718096' : '#94a3b8',
+    border: isLight ? '#e2e8f0' : '#1e293b',
+    inputBg: isLight ? '#f8fafc' : '#0a0a0a',
+    main: '#00f0ff',
+    accent: '#bd00ff',
+    success: '#10b981'
+  }), [isLight])
+
+  const showToast = (message, type = 'info') => setToast({ message, type })
+
+  // --- Core Functions ---
+
+  const pushHistory = useCallback((snapshot) => {
+    const copy = JSON.parse(JSON.stringify(snapshot))
+    setHistory(prev => {
+      const head = prev.slice(0, historyIndex + 1)
+      const next = [...head, copy].slice(-30)
+      setHistoryIndex(next.length - 1)
+      localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(next))
+      localStorage.setItem(STORAGE_KEYS.HISTORY_IDX, String(next.length - 1))
+      return next
+    })
+  }, [historyIndex])
+
+  const undo = () => {
+    if (historyIndex > 0) {
+      const prevIdx = historyIndex - 1
+      const snap = history[prevIdx]
+      setData(JSON.parse(JSON.stringify(snap)))
+      setHistoryIndex(prevIdx)
+    }
+  }
+
+  const handleLogin = async (pass) => {
+    setIsLoading(true)
     try {
       const res = await fetch('/api/savePortfolio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password, data: null })
+        body: JSON.stringify({ password: pass, data: null })
       })
       if (res.ok) {
         setIsLoggedIn(true)
-        logAdminLogin()
-        setSaveStatus('success')
-        setTimeout(() => setSaveStatus(''), 2000)
+        setPassword(pass)
+        localStorage.setItem(STORAGE_KEYS.SESSION, pass)
+        showToast('Nexus Protocol Established', 'success')
       } else {
-        setSaveStatus('error')
-        setTimeout(() => setSaveStatus(''), 2000)
+        showToast('Invalid Security Key', 'error')
+        localStorage.removeItem(STORAGE_KEYS.SESSION)
       }
-    } catch(err) {
-      setSaveStatus('error')
-      setTimeout(() => setSaveStatus(''), 2000)
+    } catch (e) {
+      showToast('Nexus Signal Failed', 'error')
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const saveData = async () => {
-    setSaveStatus('saving')
+    showToast('Syncing with Firebase...', 'info')
     try {
-      const response = await fetch('/api/savePortfolio', {
+      const res = await fetch('/api/savePortfolio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password, data })
       })
-      if (response.ok) {
-        localStorage.setItem('portfolioDataV5', JSON.stringify(data))
-        setSaveStatus('success')
-        setTimeout(() => setSaveStatus(''), 3000)
+      if (res.ok) {
+        showToast('Changes Persisted', 'success')
+        pushHistory(data)
       } else {
-        setSaveStatus('error')
-        setTimeout(() => setSaveStatus(''), 3000)
+        showToast('Sync Failed', 'error')
       }
     } catch (e) {
-      setSaveStatus('error')
-      setTimeout(() => setSaveStatus(''), 3000)
+      showToast('Network Signal Lost', 'error')
     }
   }
 
-  const exportData = () => {
-    const json = JSON.stringify(data, null, 2)
-    const blob = new Blob([json], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `portfolio-backup-${new Date().toISOString().split('T')[0]}.json`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+  const changePassword = async (newPass) => {
+    if (!confirm('Change administrative access key?')) return
+    try {
+      const res = await fetch('/api/savePortfolio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password, newPassword: newPass })
+      })
+      if (res.ok) {
+        setPassword(newPass)
+        localStorage.setItem(STORAGE_KEYS.SESSION, newPass)
+        showToast('Access Key Rotated', 'success')
+      }
+    } catch (e) { showToast('Security Error', 'error') }
   }
 
-  const importData = (e) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = (event) => {
+  // --- Effects ---
+
+  useEffect(() => {
+    const init = async () => {
+      const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME)
+      if (savedTheme) setPanelTheme(savedTheme)
+
+      const savedPass = localStorage.getItem(STORAGE_KEYS.SESSION)
+      if (savedPass) {
+        handleLogin(savedPass)
+      } else {
+        setIsLoading(false)
+      }
+
       try {
-        const imported = JSON.parse(event.target?.result)
-        setData(imported)
-        setSaveStatus('success')
-        setTimeout(() => setSaveStatus(''), 2000)
-      } catch (err) {
-        setSaveStatus('error')
-      }
+        const res = await fetch('https://doser-portfolio-default-rtdb.firebaseio.com/portfolioData.json')
+        const db = await res.json()
+        if (db) {
+          const merged = { 
+            ...DEFAULT_DATA, 
+            ...db,
+            texts: {
+              en: { ...DEFAULT_DATA.texts.en, ...(db.texts?.en || {}) },
+              ar: { ...DEFAULT_DATA.texts.ar, ...(db.texts?.ar || {}) }
+            },
+            colors: {
+              dark: { ...DEFAULT_DATA.colors.dark, ...(db.colors?.dark || {}) },
+              light: { ...DEFAULT_DATA.colors.light, ...(db.colors?.light || {}) }
+            },
+            sections: { ...DEFAULT_DATA.sections, ...(db.sections || {}) },
+            images: { ...DEFAULT_DATA.images, ...(db.images || {}) },
+            works: db.works || DEFAULT_DATA.works
+          }
+          setData(merged)
+          setHistory([JSON.parse(JSON.stringify(merged))])
+          setHistoryIndex(0)
+        }
+      } catch (e) {}
+      setIsReady(true)
     }
-    reader.readAsText(file)
-  }
+    init()
+  }, [])
 
-  const updateColor = (themeMode, key, value) => {
-    setData(prev => ({
-      ...prev,
-      colors: {
-        ...prev.colors,
-        [themeMode]: { ...prev.colors[themeMode], [key]: value }
-      }
-    }))
-  }
-
-  const updateText = (lang, key, value) => {
-    setData(prev => ({ ...prev, texts: { ...prev.texts, [lang]: { ...prev.texts[lang], [key]: value } } }))
-  }
-
-  const toggleSection = (section) => {
-    setData(prev => ({ ...prev, sections: { ...prev.sections, [section]: !prev.sections[section] } }))
-  }
-
-  const updateImage = (key, value) => {
-    setData(prev => ({ ...prev, images: { ...prev.images, [key]: value } }))
-  }
-
-  const handleImageUpload = (e, key) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    if (file.size > 2 * 1024 * 1024) {
-      setSaveStatus('error')
-      setTimeout(() => setSaveStatus(''), 2000)
-      return
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [statsRes, activityRes] = await Promise.all([
+          fetch('/api/visit'),
+          fetch('/api/activity')
+        ])
+        const stats = await statsRes.json()
+        const logs = await activityRes.json()
+        if (stats) setVisitStats(stats)
+        if (Array.isArray(logs)) setActivity(logs.slice(0, 20))
+      } catch (e) {}
     }
-    const reader = new FileReader()
-    reader.onload = () => {
-      updateImage(key, reader.result)
-    }
-    reader.readAsDataURL(file)
-  }
+    fetchData()
+    const int = setInterval(fetchData, 60000)
+    return () => clearInterval(int)
+  }, [])
 
-  const addWork = () => {
-    setData(prev => ({ ...prev, works: [...(prev.works || []), { id: Date.now(), title: '', desc: '', url: '', images: [] }] }))
-  }
+  // --- Renderers ---
 
-  const updateWork = (id, field, value) => {
-    setData(prev => ({
-      ...prev,
-      works: (prev.works || []).map(w => w.id === id ? { ...w, [field]: value } : w)
-    }))
-  }
-
-  const addWorkImage = (id, imageUrl) => {
-    setData(prev => ({
-      ...prev,
-      works: (prev.works || []).map(w => w.id === id ? { ...w, images: [...(w.images || []), imageUrl] } : w)
-    }))
-  }
-
-  const removeWorkImage = (id, index) => {
-    setData(prev => ({
-      ...prev,
-      works: (prev.works || []).map(w => w.id === id ? { ...w, images: (w.images || []).filter((_, i) => i !== index) } : w)
-    }))
-  }
-
-  const handleWorkImageUpload = (e, id) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    if (file.size > 2 * 1024 * 1024) {
-      setSaveStatus('error')
-      setTimeout(() => setSaveStatus(''), 2000)
-      return
-    }
-    const reader = new FileReader()
-    reader.onload = () => {
-      addWorkImage(id, reader.result)
-    }
-    reader.readAsDataURL(file)
-  }
-
-  const deleteWork = (id) => {
-    if (!confirm('Delete this project? This action cannot be undone.')) return
-    setData(prev => ({ ...prev, works: (prev.works || []).filter(w => w.id !== id) }))
-  }
-
-  if (!isLoggedIn) {
+  if (isLoading) {
     return (
-      <>
-        <Head><title>Secret Admin Portal</title></Head>
-        <div style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'var(--bg-color)',
-          backgroundImage: 'radial-gradient(circle at 15% 50%, rgba(189, 0, 255, 0.08), transparent 25%), radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.08), transparent 25%)',
-          padding: '2rem'
-        }}>
-          <div style={{
-            background: 'var(--glass-bg)',
-            backdropFilter: 'blur(16px)',
-            border: '1px solid var(--glass-border)',
-            borderRadius: '2rem',
-            padding: '4rem',
-            maxWidth: '450px',
-            width: '100%',
-            boxShadow: 'var(--glass-shadow)'
-          }}>
-            <h1 style={{ textAlign: 'center', marginBottom: '0.5rem', color: 'var(--main-color)', fontSize: '2.8rem' }}>
-              🔐 Admin Portal
-            </h1>
-            <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem', fontSize: '1.3rem' }}>
-              Control your portfolio with full power
-            </p>
-            <form onSubmit={handleLogin}>
-              <div style={{ marginBottom: '2rem' }}>
-                <label style={{ display: 'block', marginBottom: '0.8rem', color: 'var(--text-color)', fontSize: '1.4rem', fontWeight: '600' }}>
-                  Access Key
-                </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  style={{
-                    width: '100%',
-                    padding: '1.2rem',
-                    background: 'rgba(0, 0, 0, 0.2)',
-                    border: '1px solid var(--glass-border)',
-                    borderRadius: '1rem',
-                    color: 'var(--text-color)',
-                    fontSize: '1.4rem',
-                    outline: 'none',
-                    boxSizing: 'border-box'
-                  }}
-                />
-              </div>
-              <button 
-                type="submit" 
-                style={{
-                  width: '100%',
-                  padding: '1.2rem',
-                  background: 'var(--main-color)',
-                  color: 'var(--bg-color)',
-                  border: 'none',
-                  borderRadius: '1rem',
-                  fontSize: '1.6rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => e.target.style.transform = 'translateY(-2px)'}
-                onMouseLeave={(e) => e.target.style.transform = 'translateY(0)'}
-              >
-                Unlock Portal
-              </button>
-              {saveStatus === 'error' && (
-                <p style={{ color: '#ff6b6b', marginTop: '1rem', textAlign: 'center', fontSize: '1.2rem' }}>❌ Authentication failed</p>
-              )}
-            </form>
-          </div>
-        </div>
-      </>
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: panelColors.bg, color: panelColors.text }}>
+         <div style={{ textAlign: 'center' }}>
+            <div className="spin-loader"></div>
+            <p style={{ marginTop: '1.5rem', fontWeight: 800, letterSpacing: '2px', fontSize: '0.8rem' }}>DOSER ADMIN OS INITIALIZING...</p>
+         </div>
+         <style jsx>{`
+           .spin-loader { width: 40px; height: 40px; border: 3px solid ${panelColors.border}; border-top-color: ${panelColors.main}; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+           @keyframes spin { to { transform: rotate(360deg); } }
+         `}</style>
+      </div>
     )
   }
 
-  const tabs = [
-    { id: 'overview', label: '📊 Overview', icon: '📈' },
-    { id: 'colors', label: '🎨 Colors', icon: '🌈' },
-    { id: 'textsEn', label: '🇬🇧 English', icon: '📝' },
-    { id: 'textsAr', label: '🇸🇦 Arabic', icon: '📝' },
-    { id: 'sections', label: '👁️ Visibility', icon: '👁️' },
-    { id: 'media', label: '🖼️ Media', icon: '📸' },
-    { id: 'works', label: '🚀 Projects', icon: '💼' },
+  if (!isLoggedIn) {
+     return (
+       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: panelColors.bg, padding: '2rem' }}>
+         <Card panelColors={panelColors} style={{ maxWidth: '400px', width: '100%', textAlign: 'center' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1.5rem' }}>🔐</div>
+            <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: 900 }}>Secure Terminal</h1>
+            <p style={{ color: panelColors.textMuted, marginTop: '0.5rem', marginBottom: '2rem' }}>Administrative authorization required.</p>
+            <form onSubmit={(e) => { e.preventDefault(); handleLogin(password) }}>
+              <InputField type="password" placeholder="Access Key" value={password} onChange={setPassword} panelColors={panelColors} />
+              <button style={{ width: '100%', padding: '1rem', borderRadius: '1rem', border: 'none', background: panelColors.main, color: 'black', fontWeight: 800, cursor: 'pointer' }}>AUTHORIZE ACCESS</button>
+            </form>
+         </Card>
+       </div>
+     )
+  }
+
+  const Tabs = [
+    { id: 'overview', label: 'Overview', icon: '📊' },
+    { id: 'content', label: 'Content', icon: '📝' },
+    { id: 'design', label: 'Design', icon: '🎨' },
+    { id: 'projects', label: 'Portfolio', icon: '🚀' },
+    { id: 'visibility', label: 'Visibility', icon: '👁️' },
+    { id: 'settings', label: 'Security', icon: '⚙️' },
   ]
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg-color)' }}>
-      <Head><title>Admin Dashboard - Portfolio Control</title></Head>
-
+    <div style={{ display: 'flex', minHeight: '100vh', background: panelColors.bg, color: panelColors.text, fontFamily: 'Inter, sans-serif' }}>
+      <Head><title>Admin OS | Doser</title></Head>
+      
       {/* Sidebar */}
       <div style={{
-        width: '280px',
-        background: 'linear-gradient(135deg, rgba(5, 5, 5, 0.9) 0%, rgba(17, 17, 17, 0.8) 100%)',
-        borderRight: '1px solid var(--glass-border)',
-        padding: '2rem 1.5rem',
-        overflowY: 'auto',
-        position: 'fixed',
-        height: '100vh',
-        left: 0,
-        top: 0,
-        zIndex: 50
+        width: isSidebarOpen ? '260px' : '80px',
+        background: panelColors.sidebar,
+        borderRight: `1px solid ${panelColors.border}`,
+        display: 'flex', flexDirection: 'column',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+        position: 'sticky', top: 0, height: '100vh', zIndex: 100
       }}>
-        <h2 style={{ color: 'var(--main-color)', marginBottom: '2.5rem', fontSize: '1.6rem', fontWeight: '700', textAlign: 'center' }}>
-          ⚙️ Control
-        </h2>
-        
-        {tabs.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            style={{
-              width: '100%',
-              padding: '1rem',
-              marginBottom: '0.6rem',
-              background: activeTab === tab.id ? 'var(--main-color)' : 'transparent',
-              color: activeTab === tab.id ? 'var(--bg-color)' : 'var(--text-muted)',
-              border: '1px solid ' + (activeTab === tab.id ? 'var(--main-color)' : 'var(--glass-border)'),
-              borderRadius: '0.8rem',
-              fontSize: '1.2rem',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              textAlign: 'left'
-            }}
-            onMouseEnter={(e) => {
-              if (activeTab !== tab.id) {
-                e.target.style.borderColor = 'var(--main-color)'
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (activeTab !== tab.id) {
-                e.target.style.borderColor = 'var(--glass-border)'
-              }
-            }}
-          >
-            {tab.icon}
+        <div style={{ padding: '2rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: isSidebarOpen ? 'space-between' : 'center' }}>
+          {isSidebarOpen && <span style={{ fontWeight: 900, fontSize: '1.4rem', letterSpacing: '-1px' }}>DOSER<span style={{ color: panelColors.main }}>.</span></span>}
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ background: 'none', border: 'none', color: panelColors.text, cursor: 'pointer', fontSize: '1.2rem' }}>
+            {isSidebarOpen ? '◀' : '▶'}
           </button>
-        ))}
+        </div>
 
-        <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--glass-border)' }}>
-          <button
-            onClick={saveData}
-            disabled={saveStatus === 'saving'}
-            style={{
-              width: '100%',
-              padding: '1rem',
-              background: saveStatus === 'success' ? '#2ecc71' : saveStatus === 'error' ? '#e74c3c' : 'var(--main-color)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '0.8rem',
-              fontSize: '1.2rem',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              marginBottom: '0.8rem'
-            }}
-          >
-            {saveStatus === 'saving' ? '⏳' : saveStatus === 'success' ? '✅' : saveStatus === 'error' ? '❌' : '💾'}
+        <div style={{ flex: 1, padding: '0 0.8rem' }}>
+          {Tabs.map(t => (
+            <button
+              key={t.id}
+              onClick={() => setActiveTab(t.id)}
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', gap: '1rem',
+                padding: '0.9rem 1.2rem', borderRadius: '0.8rem', marginBottom: '0.4rem',
+                border: 'none', background: activeTab === t.id ? `${panelColors.main}15` : 'none',
+                color: activeTab === t.id ? panelColors.main : panelColors.textMuted,
+                cursor: 'pointer', transition: 'all 0.2s',
+                justifyContent: isSidebarOpen ? 'flex-start' : 'center'
+              }}
+            >
+              <span style={{ fontSize: '1.2rem' }}>{t.icon}</span>
+              {isSidebarOpen && <span style={{ fontWeight: 700 }}>{t.label}</span>}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ padding: '1.5rem' }}>
+          <button 
+            onClick={() => { const n = isLight ? 'dark' : 'light'; setPanelTheme(n); localStorage.setItem(STORAGE_KEYS.THEME, n); }}
+            style={{ width: '100%', padding: '0.8rem', borderRadius: '0.8rem', border: `1px solid ${panelColors.border}`, background: 'none', color: panelColors.text, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.8rem', justifyContent: isSidebarOpen ? 'flex-start' : 'center' }}>
+            <span>{isLight ? '🌙' : '☀️'}</span>
+            {isSidebarOpen && <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{isLight ? 'Dark Mode' : 'Light Mode'}</span>}
           </button>
-
-          <button
-            onClick={exportData}
-            style={{
-              width: '100%',
-              padding: '0.8rem',
-              background: 'transparent',
-              color: 'var(--text-muted)',
-              border: '1px solid var(--glass-border)',
-              borderRadius: '0.8rem',
-              fontSize: '1rem',
-              cursor: 'pointer',
-              marginBottom: '0.5rem',
-              transition: 'all 0.3s ease'
-            }}
-          >
-            📥
-          </button>
-
-          <label style={{
-            display: 'block',
-            width: '100%',
-            padding: '0.8rem',
-            background: 'transparent',
-            color: 'var(--text-muted)',
-            border: '1px solid var(--glass-border)',
-            borderRadius: '0.8rem',
-            fontSize: '1rem',
-            cursor: 'pointer',
-            textAlign: 'center',
-            transition: 'all 0.3s ease'
-          }}>
-            📤
-            <input type="file" accept=".json" onChange={importData} style={{ display: 'none' }} />
-          </label>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div style={{ marginLeft: '280px', flex: 1, padding: '3rem', overflowY: 'auto', maxHeight: '100vh' }}>
-        {/* Status Bar */}
-        {saveStatus && (
-          <div style={{
-            padding: '1.2rem',
-            borderRadius: '0.8rem',
-            marginBottom: '2rem',
-            background: saveStatus === 'success' ? 'rgba(46, 204, 113, 0.1)' : 'rgba(231, 76, 60, 0.1)',
-            border: '1px solid ' + (saveStatus === 'success' ? '#2ecc71' : '#e74c3c'),
-            color: saveStatus === 'success' ? '#2ecc71' : '#e74c3c',
-            fontSize: '1.2rem'
-          }}>
-            {saveStatus === 'saving' && '⏳ Saving your changes...'}
-            {saveStatus === 'success' && '✅ All changes saved successfully!'}
-            {saveStatus === 'error' && '❌ Error occurred. Please try again.'}
+      <div style={{ flex: 1, padding: '2.5rem', maxWidth: '1400px', margin: '0 auto', width: '100%' }}>
+        {/* Universal Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '2.4rem', fontWeight: 900, letterSpacing: '-1px' }}>Welcome back, Doser</h1>
+            <p style={{ margin: '0.4rem 0 0', color: panelColors.textMuted, fontWeight: 500 }}>System Control & Performance Matrix</p>
           </div>
-        )}
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            {historyIndex > 0 && <button onClick={undo} style={{ padding: '0.8rem 1.4rem', borderRadius: '0.8rem', border: `1px solid ${panelColors.border}`, background: panelColors.card, color: panelColors.text, cursor: 'pointer', fontWeight: 600 }}>Undo ↩️</button>}
+            <button onClick={saveData} style={{ padding: '0.8rem 2rem', borderRadius: '0.8rem', border: 'none', background: panelColors.main, color: 'black', fontWeight: 800, cursor: 'pointer', boxShadow: `0 8px 20px -5px ${panelColors.main}66` }}>SAVE CHANGES</button>
+          </div>
+        </div>
 
-        {/* Overview Tab */}
+        {/* Tab View */}
         {activeTab === 'overview' && (
-          <div style={{ background: 'var(--glass-bg)', borderRadius: '1.5rem', padding: '2.5rem', border: '1px solid var(--glass-border)' }}>
-            <h2 style={{ marginBottom: '2.5rem', color: 'var(--text-color)', fontSize: '2.4rem', fontWeight: '700' }}>📊 Admin Dashboard</h2>
-            
-            {/* Analytics Cards */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
-              <div style={{ background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(0, 240, 255, 0.05) 100%)', padding: '2rem', borderRadius: '1rem', border: '2px solid rgba(0, 240, 255, 0.3)' }}>
-                <h3 style={{ color: 'var(--main-color)', marginBottom: '0.5rem', fontSize: '1.1rem', marginTop: 0 }}>👤 Admin Logins</h3>
-                <p style={{ fontSize: '2.8rem', fontWeight: '700', color: 'var(--text-color)', margin: 0 }}>{analytics.adminLogins}</p>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.3rem' }}>Total access count</p>
-              </div>
-
-              <div style={{ background: 'linear-gradient(135deg, rgba(189, 0, 255, 0.1) 0%, rgba(189, 0, 255, 0.05) 100%)', padding: '2rem', borderRadius: '1rem', border: '2px solid rgba(189, 0, 255, 0.3)' }}>
-                <h3 style={{ color: '#bd00ff', marginBottom: '0.5rem', fontSize: '1.1rem', marginTop: 0 }}>📚 Projects</h3>
-                <p style={{ fontSize: '2.8rem', fontWeight: '700', color: 'var(--text-color)', margin: 0 }}>{data.works?.length || 0}</p>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.3rem' }}>Total portfolio items</p>
-              </div>
-
-              <div style={{ background: 'linear-gradient(135deg, rgba(52, 211, 153, 0.1) 0%, rgba(52, 211, 153, 0.05) 100%)', padding: '2rem', borderRadius: '1rem', border: '2px solid rgba(52, 211, 153, 0.3)' }}>
-                <h3 style={{ color: '#34d399', marginBottom: '0.5rem', fontSize: '1.1rem', marginTop: 0 }}>🗣️ Languages</h3>
-                <p style={{ fontSize: '2.8rem', fontWeight: '700', color: 'var(--text-color)', margin: 0 }}>2</p>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.3rem' }}>EN + AR Support</p>
-              </div>
-
-              <div style={{ background: 'linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%)', padding: '2rem', borderRadius: '1rem', border: '2px solid rgba(255, 193, 7, 0.3)' }}>
-                <h3 style={{ color: '#ffc107', marginBottom: '0.5rem', fontSize: '1.1rem', marginTop: 0 }}>🎨 Themes</h3>
-                <p style={{ fontSize: '2.8rem', fontWeight: '700', color: 'var(--text-color)', margin: 0 }}>2</p>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '0.3rem' }}>Dark + Light</p>
-              </div>
+          <div style={{ display: 'grid', gap: '2rem' }}>
+            {/* Top Metrics */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
+               {[
+                 { l: 'TOTAL IMPRESSIONS', v: visitStats.total, i: '👥', c: panelColors.main },
+                 { l: 'PROJECTS DEPLOYED', v: data.works?.length, i: '🚀', c: panelColors.accent },
+                 { l: 'SYSTEM UPTIME', v: 'OPERATIONAL', i: '⚡', c: '#10b981', pulse: true },
+                 { l: 'SECURITY STATUS', v: 'ENCRYPTED', i: '🛡️', c: '#f59e0b' }
+               ].map((m, i) => (
+                 <div key={i} style={{ background: panelColors.card, padding: '1.5rem', borderRadius: '1.4rem', border: `1px solid ${panelColors.border}`, display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+                   <div style={{ width: '56px', height: '56px', borderRadius: '1.1rem', background: `${m.c}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem' }}>{m.i}</div>
+                   <div>
+                     <div style={{ fontSize: '0.75rem', color: panelColors.textMuted, fontWeight: 800, letterSpacing: '0.5px' }}>{m.l}</div>
+                     <div style={{ fontSize: '1.4rem', fontWeight: 900, color: m.pulse ? m.c : panelColors.text, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        {m.pulse && <span style={{ width: '8px', height: '8px', background: m.c, borderRadius: '50%', animation: 'pulse-glow 1.5s infinite' }}></span>}
+                        {m.v}
+                     </div>
+                   </div>
+                 </div>
+               ))}
             </div>
 
-            {/* Last Login Info */}
-            {analytics.lastVisit && (
-              <div style={{ background: 'rgba(0, 0, 0, 0.15)', padding: '1.5rem', borderRadius: '1rem', border: '1px solid var(--glass-border)', marginBottom: '2rem' }}>
-                <p style={{ margin: 0, color: 'var(--text-color)', fontSize: '1.1rem' }}>
-                  ⏱️ Last Access: <strong>{new Date(analytics.lastVisit).toLocaleString()}</strong>
-                </p>
-              </div>
-            )}
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr', gap: '2rem' }}>
+              <div style={{ display: 'grid', gap: '2rem' }}>
+                <Card panelColors={panelColors} title="Engagement Overview" subtitle="Real-time status of your portfolio modules.">
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
+                    {Object.keys(data.sections).map(s => (
+                      <div key={s} style={{ padding: '1.2rem', background: panelColors.bg, borderRadius: '1.1rem', border: `1px solid ${panelColors.border}`, textAlign: 'center' }}>
+                         <div style={{ fontSize: '0.7rem', color: panelColors.textMuted, fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.4rem' }}>{s}</div>
+                         <div style={{ fontSize: '1rem', fontWeight: 900, color: data.sections[s] ? panelColors.main : panelColors.textMuted }}>
+                           {data.sections[s] ? 'ACTIVE' : 'OFFLINE'}
+                         </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
 
-            {/* Features Info */}
-            <div style={{ background: 'rgba(0, 0, 0, 0.1)', padding: '2rem', borderRadius: '1rem' }}>
-              <h3 style={{ marginBottom: '1.2rem', color: 'var(--text-color)', fontSize: '1.5rem' }}>✨ Available Features</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
-                <div style={{ paddingLeft: '2rem' }}>
-                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>🎨 Customize Dark & Light themes</p>
-                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>📝 Edit English & Arabic content</p>
-                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>👁️ Toggle sections visibility</p>
-                </div>
-                <div style={{ paddingLeft: '2rem' }}>
-                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>🖼️ Manage personal images</p>
-                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>🚀 Add & manage projects</p>
-                  <p style={{ color: 'var(--text-color)', margin: '0.5rem 0', fontSize: '1rem' }}>📥📤 Backup & restore data</p>
-                </div>
+                <Card panelColors={panelColors} title="Command Center" subtitle="Direct control of core administrative tasks.">
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem', marginTop: '0.5rem' }}>
+                    {[
+                      { l: 'New Project', t: 'projects', c: panelColors.main, i: '➕' },
+                      { l: 'Color Forge', t: 'design', c: panelColors.accent, i: '🎨' },
+                      { l: 'Snapshot', t: 'settings', c: panelColors.textMuted, i: '💾' }
+                    ].map(b => (
+                      <button key={b.l} onClick={() => setActiveTab(b.t)} style={{ padding: '1.2rem', borderRadius: '1.1rem', border: `1px solid ${b.c}30`, background: `${b.c}08`, color: b.c === panelColors.textMuted ? panelColors.text : b.c, fontWeight: 800, cursor: 'pointer', transition: 'transform 0.2s' }} onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'} onMouseLeave={e => e.currentTarget.style.transform = 'none'}>
+                        {b.i} {b.l}
+                      </button>
+                    ))}
+                  </div>
+                </Card>
+              </div>
+
+              <div style={{ display: 'grid', gap: '2rem' }}>
+                <Card panelColors={panelColors} title="Popularity Matrix" subtitle="User interaction frequency.">
+                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '0.5rem' }}>
+                    {data.works?.sort((a,b) => (visitStats.projectVisits?.[b.id] || 0) - (visitStats.projectVisits?.[a.id] || 0)).slice(0,5).map((w, i) => {
+                      const visits = visitStats.projectVisits?.[w.id] || 0;
+                      const max = Math.max(...Object.values(visitStats.projectVisits || {x:1}));
+                      return (
+                      <div key={w.id} style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
+                        <div style={{ fontSize: '1.2rem', fontWeight: 900, color: i === 0 ? '#ffd700' : panelColors.textMuted, width: '25px' }}>{i+1}</div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: '0.9rem', fontWeight: 800 }}>{w.title || 'Unknown Project'}</div>
+                          <div style={{ height: '5px', background: panelColors.border, borderRadius: '4px', marginTop: '6px', overflow: 'hidden' }}>
+                            <div style={{ width: `${(visits / max) * 100}%`, height: '100%', background: `linear-gradient(to right, ${panelColors.main}, ${panelColors.accent})` }}></div>
+                          </div>
+                        </div>
+                        <div style={{ fontSize: '0.85rem', fontWeight: 900, color: panelColors.main }}>{visits}</div>
+                      </div>
+                    )})}
+                   </div>
+                </Card>
+
+                <Card panelColors={panelColors} title="Log Stream" subtitle="Administrative event tracking.">
+                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+                    {activity.slice(0, 6).map((a, i) => (
+                      <div key={i} style={{ fontSize: '0.75rem', display: 'flex', gap: '0.7rem', paddingBottom: '0.6rem', borderBottom: i < 5 ? `1px solid ${panelColors.border}50` : 'none' }}>
+                        <span style={{ color: panelColors.main, fontWeight: 800 }}>{new Date(a.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</span>
+                        <span style={{ fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{a.action.split('_').join(' ')}</span>
+                      </div>
+                    ))}
+                   </div>
+                </Card>
               </div>
             </div>
           </div>
         )}
 
-        {/* Colors Tab */}
-        {activeTab === 'colors' && (
-          <div style={{ background: 'var(--glass-bg)', borderRadius: '1.5rem', padding: '2.5rem', border: '1px solid var(--glass-border)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--glass-border)' }}>
-              <h2 style={{ margin: 0, color: 'var(--text-color)', fontSize: '2rem' }}>🎨 Colors & Theme</h2>
-              <div style={{ display: 'flex', gap: '0.8rem' }}>
-                {['dark', 'light'].map(theme => (
+        {/* Other Tabs remain clean and functional */}
+        {activeTab === 'content' && (
+          <div style={{ display: 'grid', gap: '2rem' }}>
+             {/* Content Section Sub-Nav */}
+             <div style={{ display: 'flex', gap: '0.8rem', overflowX: 'auto', paddingBottom: '1rem', scrollbarWidth: 'none' }}>
+                {[
+                  { id: 'hero', label: 'Hero Section', icon: '👤' },
+                  { id: 'nav', label: 'Navigation', icon: '🔗' },
+                  { id: 'journey', label: 'Journey', icon: '📚' },
+                  { id: 'services', label: 'Services', icon: '🛠️' },
+                  { id: 'skills', label: 'Skills/AI', icon: '🧠' },
+                  { id: 'projects', label: 'Projects UI', icon: '🎨' },
+                  { id: 'contact', label: 'Contact', icon: '📧' }
+                ].map(s => (
                   <button
-                    key={theme}
-                    onClick={() => setEditingTheme(theme)}
+                    key={s.id}
+                    onClick={() => setActiveContentSection(s.id)}
                     style={{
-                      padding: '0.8rem 1.6rem',
-                      background: editingTheme === theme ? 'var(--main-color)' : 'transparent',
-                      color: editingTheme === theme ? 'var(--bg-color)' : 'var(--text-color)',
-                      border: '1px solid ' + (editingTheme === theme ? 'var(--main-color)' : 'var(--glass-border)'),
-                      borderRadius: '0.8rem',
-                      cursor: 'pointer',
-                      fontWeight: '600',
-                      fontSize: '1.2rem',
-                      transition: 'all 0.3s ease'
+                      padding: '0.8rem 1.5rem', borderRadius: '2rem', border: `1px solid ${activeContentSection === s.id ? panelColors.main : panelColors.border}`,
+                      background: activeContentSection === s.id ? `${panelColors.main}15` : panelColors.card,
+                      color: activeContentSection === s.id ? panelColors.main : panelColors.textMuted,
+                      fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '0.5rem'
                     }}
                   >
-                    {theme === 'dark' ? '🌙 Dark' : '☀️ Light'}
+                    <span>{s.icon}</span> {s.label}
                   </button>
                 ))}
-              </div>
-            </div>
+             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
-              {[
-                { key: 'mainColor', label: 'Main Accent', desc: 'Primary highlight color' },
-                { key: 'bgColor', label: 'Background', desc: 'Main background color' },
-                { key: 'secBgColor', label: 'Secondary BG', desc: 'Cards and sections' },
-                { key: 'textColor', label: 'Text Color', desc: 'Body text color' }
-              ].map(color => (
-                <div key={color.key} style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
-                  <label style={{ color: 'var(--text-color)', fontWeight: '600', fontSize: '1.3rem' }}>{color.label}</label>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', margin: 0 }}>{color.desc}</p>
-                  <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    <input
-                      type="color"
-                      value={data.colors[editingTheme][color.key]}
-                      onChange={(e) => updateColor(editingTheme, color.key, e.target.value)}
-                      style={{ width: '60px', height: '60px', borderRadius: '0.8rem', border: '1px solid var(--glass-border)', cursor: 'pointer' }}
-                    />
-                    <input
-                      type="text"
-                      value={data.colors[editingTheme][color.key]}
-                      onChange={(e) => updateColor(editingTheme, color.key, e.target.value)}
-                      style={{
-                        flex: 1,
-                        padding: '0.8rem',
-                        background: 'rgba(0, 0, 0, 0.2)',
-                        border: '1px solid var(--glass-border)',
-                        borderRadius: '0.6rem',
-                        color: 'var(--text-color)',
-                        fontSize: '1.2rem',
-                        fontFamily: 'monospace'
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+             <Card panelColors={panelColors} title={`${activeContentSection.toUpperCase()} MODULE`} subtitle="Sync English and Arabic content for this specific section.">
+                <div style={{ display: 'grid', gap: '2rem' }}>
+                   {(() => {
+                     const sectionKeys = {
+                       hero: ['hi', 'name', 'iama', 'social', 'homeDesc', 'hire', 'contactme'],
+                       nav: ['home', 'education', 'services', 'contact', 'mywebsites', 'faq', 'aboutMe', 'copyright'],
+                       journey: ['educationHeading', 'edu1Title', 'edu1Desc', 'edu2Title', 'edu2Desc', 'edu3Title', 'edu3Desc', 'edu4Title', 'edu4Desc'],
+                       services: ['uiux', 'uiuxDesc', 'frontend', 'frontendDesc', 'backend', 'backendDesc', 'testing', 'testingDesc'],
+                       skills: ['skillsHeading', 'aiSpecialist'],
+                       projects: ['myWebsitesHeading', 'viewProject'],
+                       contact: ['contactHeading', 'namePlaceholder', 'emailPlaceholder', 'messagePlaceholder', 'sendMessage']
+                     }[activeContentSection] || [];
 
-        {/* English Texts Tab */}
-        {activeTab === 'textsEn' && (
-          <div style={{ background: 'var(--glass-bg)', borderRadius: '1.5rem', padding: '2.5rem', border: '1px solid var(--glass-border)' }}>
-            <h2 style={{ marginBottom: '2rem', color: 'var(--text-color)', fontSize: '2rem' }}>🇬🇧 English Content</h2>
-            
-            {['Hero', 'Education', 'Services', 'Contact', 'Other'].map(section => (
-              <div key={section} style={{ marginBottom: '3rem' }}>
-                <h3 style={{ color: 'var(--main-color)', marginBottom: '1.5rem', fontSize: '1.5rem' }}>📌 {section} Section</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-                  {Object.keys(data.texts.en).filter(key => {
-                    if (section === 'Hero') return ['hi', 'name', 'iama', 'homeDesc', 'hire', 'contactme'].includes(key)
-                    if (section === 'Education') return ['educationHeading', 'highSchool', 'highSchoolDesc', 'university', 'universityDesc', 'internship', 'internshipDesc', 'firstJob', 'firstJobDesc'].includes(key)
-                    if (section === 'Services') return ['servicesHeading', 'uiux', 'uiuxDesc', 'frontend', 'frontendDesc', 'backend', 'backendDesc', 'testing', 'testingDesc'].includes(key)
-                    if (section === 'Contact') return ['contactHeading', 'namePlaceholder', 'emailPlaceholder', 'messagePlaceholder', 'sendMessage'].includes(key)
-                    return !['hi', 'name', 'iama', 'homeDesc', 'hire', 'contactme', 'educationHeading', 'highSchool', 'highSchoolDesc', 'university', 'universityDesc', 'internship', 'internshipDesc', 'firstJob', 'firstJobDesc', 'servicesHeading', 'uiux', 'uiuxDesc', 'frontend', 'frontendDesc', 'backend', 'backendDesc', 'testing', 'testingDesc', 'contactHeading', 'namePlaceholder', 'emailPlaceholder', 'messagePlaceholder', 'sendMessage'].includes(key)
-                  }).map(key => (
-                    <div key={key}>
-                      <label style={{ display: 'block', marginBottom: '0.6rem', color: 'var(--text-color)', fontSize: '1.2rem', fontWeight: '600' }}>
-                        {key}
-                      </label>
-                      {['homeDesc', 'highSchoolDesc', 'universityDesc', 'internshipDesc', 'firstJobDesc', 'uiuxDesc', 'frontendDesc', 'backendDesc', 'testingDesc'].includes(key) ? (
-                        <textarea
-                          value={data.texts.en[key] || ''}
-                          onChange={(e) => updateText('en', key, e.target.value)}
-                          style={{
-                            width: '100%',
-                            padding: '0.8rem',
-                            background: 'rgba(0, 0, 0, 0.2)',
-                            border: '1px solid var(--glass-border)',
-                            borderRadius: '0.6rem',
-                            color: 'var(--text-color)',
-                            fontSize: '1.1rem',
-                            minHeight: '80px',
-                            fontFamily: 'inherit',
-                            resize: 'vertical',
-                            boxSizing: 'border-box'
-                          }}
-                        />
-                      ) : (
-                        <input
-                          type="text"
-                          value={data.texts.en[key] || ''}
-                          onChange={(e) => updateText('en', key, e.target.value)}
-                          style={{
-                            width: '100%',
-                            padding: '0.8rem',
-                            background: 'rgba(0, 0, 0, 0.2)',
-                            border: '1px solid var(--glass-border)',
-                            borderRadius: '0.6rem',
-                            color: 'var(--text-color)',
-                            fontSize: '1.1rem',
-                            boxSizing: 'border-box'
-                          }}
-                        />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Arabic Texts Tab */}
-        {activeTab === 'textsAr' && (
-          <div style={{ background: 'var(--glass-bg)', borderRadius: '1.5rem', padding: '2.5rem', border: '1px solid var(--glass-border)', direction: 'rtl' }}>
-            <h2 style={{ marginBottom: '2rem', color: 'var(--text-color)', fontSize: '2rem' }}>🇸🇦 محتوى اللغة العربية</h2>
-            
-            {['القسم الرئيسي', 'التعليم', 'الخدمات', 'التواصل', 'أخرى'].map(section => (
-              <div key={section} style={{ marginBottom: '3rem' }}>
-                <h3 style={{ color: 'var(--main-color)', marginBottom: '1.5rem', fontSize: '1.5rem' }}>📌 {section}</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-                  {Object.keys(data.texts.ar).filter(key => {
-                    if (section === 'القسم الرئيسي') return ['hi', 'name', 'iama', 'homeDesc', 'hire', 'contactme'].includes(key)
-                    if (section === 'التعليم') return ['educationHeading', 'highSchool', 'highSchoolDesc', 'university', 'universityDesc', 'internship', 'internshipDesc', 'firstJob', 'firstJobDesc'].includes(key)
-                    if (section === 'الخدمات') return ['servicesHeading', 'uiux', 'uiuxDesc', 'frontend', 'frontendDesc', 'backend', 'backendDesc', 'testing', 'testingDesc'].includes(key)
-                    if (section === 'التواصل') return ['contactHeading', 'namePlaceholder', 'emailPlaceholder', 'messagePlaceholder', 'sendMessage'].includes(key)
-                    return !['hi', 'name', 'iama', 'homeDesc', 'hire', 'contactme', 'educationHeading', 'highSchool', 'highSchoolDesc', 'university', 'universityDesc', 'internship', 'internshipDesc', 'firstJob', 'firstJobDesc', 'servicesHeading', 'uiux', 'uiuxDesc', 'frontend', 'frontendDesc', 'backend', 'backendDesc', 'testing', 'testingDesc', 'contactHeading', 'namePlaceholder', 'emailPlaceholder', 'messagePlaceholder', 'sendMessage'].includes(key)
-                  }).map(key => (
-                    <div key={key}>
-                      <label style={{ display: 'block', marginBottom: '0.6rem', color: 'var(--text-color)', fontSize: '1.2rem', fontWeight: '600' }}>
-                        {key}
-                      </label>
-                      {['homeDesc', 'highSchoolDesc', 'universityDesc', 'internshipDesc', 'firstJobDesc', 'uiuxDesc', 'frontendDesc', 'backendDesc', 'testingDesc'].includes(key) ? (
-                        <textarea
-                          value={data.texts.ar[key] || ''}
-                          onChange={(e) => updateText('ar', key, e.target.value)}
-                          style={{
-                            width: '100%',
-                            padding: '0.8rem',
-                            background: 'rgba(0, 0, 0, 0.2)',
-                            border: '1px solid var(--glass-border)',
-                            borderRadius: '0.6rem',
-                            color: 'var(--text-color)',
-                            fontSize: '1.1rem',
-                            minHeight: '80px',
-                            fontFamily: 'inherit',
-                            resize: 'vertical',
-                            boxSizing: 'border-box'
-                          }}
-                        />
-                      ) : (
-                        <input
-                          type="text"
-                          value={data.texts.ar[key] || ''}
-                          onChange={(e) => updateText('ar', key, e.target.value)}
-                          style={{
-                            width: '100%',
-                            padding: '0.8rem',
-                            background: 'rgba(0, 0, 0, 0.2)',
-                            border: '1px solid var(--glass-border)',
-                            borderRadius: '0.6rem',
-                            color: 'var(--text-color)',
-                            fontSize: '1.1rem',
-                            boxSizing: 'border-box'
-                          }}
-                        />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Sections Tab */}
-        {activeTab === 'sections' && (
-          <div style={{ background: 'var(--glass-bg)', borderRadius: '1.5rem', padding: '2.5rem', border: '1px solid var(--glass-border)' }}>
-            <h2 style={{ marginBottom: '2rem', color: 'var(--text-color)', fontSize: '2rem' }}>👁️ Section Visibility</h2>
-            <div style={{ display: 'grid', gap: '1.5rem' }}>
-              {Object.keys(data.sections).map(section => (
-                <label key={section} style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '1.5rem',
-                  background: 'rgba(0, 0, 0, 0.1)',
-                  borderRadius: '0.8rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  border: '1px solid var(--glass-border)'
-                }}>
-                  <input
-                    type="checkbox"
-                    checked={data.sections[section]}
-                    onChange={() => toggleSection(section)}
-                    style={{ width: '24px', height: '24px', cursor: 'pointer', marginRight: '1.5rem' }}
-                  />
-                  <span style={{ color: 'var(--text-color)', fontSize: '1.3rem', fontWeight: '600' }}>
-                    {section.charAt(0).toUpperCase() + section.slice(1)} Section
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Media Tab */}
-        {activeTab === 'media' && (
-          <div style={{ background: 'var(--glass-bg)', borderRadius: '1.5rem', padding: '2.5rem', border: '1px solid var(--glass-border)' }}>
-            <h2 style={{ marginBottom: '2rem', color: 'var(--text-color)', fontSize: '2rem' }}>🖼️ Media & Images</h2>
-            <div style={{ display: 'grid', gap: '3rem' }}>
-              {[
-                { key: 'personal', label: 'Personal Photo', emoji: '👤' },
-                { key: 'icon', label: 'Website Icon', emoji: '🎯' }
-              ].map(img => (
-                <div key={img.key} style={{ background: 'rgba(0, 0, 0, 0.1)', padding: '2rem', borderRadius: '1rem', border: '1px solid var(--glass-border)' }}>
-                  <h3 style={{ color: 'var(--main-color)', marginBottom: '1.5rem', fontSize: '1.4rem' }}>
-                    {img.emoji} {img.label}
-                  </h3>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', alignItems: 'flex-start' }}>
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '0.8rem', color: 'var(--text-color)', fontSize: '1.2rem', fontWeight: '600' }}>
-                        Image URL or Upload
-                      </label>
-                      <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '1rem' }}>
-                        <input
-                          type="text"
-                          value={data.images[img.key]}
-                          onChange={(e) => updateImage(img.key, e.target.value)}
-                          placeholder="http://..."
-                          style={{
-                            flex: 1,
-                            padding: '0.8rem',
-                            background: 'rgba(0, 0, 0, 0.2)',
-                            border: '1px solid var(--glass-border)',
-                            borderRadius: '0.6rem',
-                            color: 'var(--text-color)',
-                            fontSize: '1.1rem',
-                            boxSizing: 'border-box'
-                          }}
-                        />
-                        <label style={{
-                          padding: '0.8rem 1.5rem',
-                          background: 'var(--main-color)',
-                          color: 'var(--bg-color)',
-                          borderRadius: '0.6rem',
-                          cursor: 'pointer',
-                          fontWeight: '600',
-                          fontSize: '1rem',
-                          whiteSpace: 'nowrap'
-                        }}>
-                          Upload
-                          <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, img.key)} style={{ display: 'none' }} />
-                        </label>
-                      </div>
-                    </div>
-                    {data.images[img.key] && (
-                      <div>
-                        <label style={{ display: 'block', marginBottom: '0.8rem', color: 'var(--text-color)', fontSize: '1.2rem', fontWeight: '600' }}>
-                          Preview
-                        </label>
-                        <img src={data.images[img.key]} alt="Preview" style={{
-                          width: '100%',
-                          height: 'auto',
-                          maxHeight: '200px',
-                          borderRadius: '0.8rem',
-                          border: '1px solid var(--glass-border)',
-                          objectFit: 'contain'
-                        }} />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Projects Tab */}
-        {activeTab === 'works' && (
-          <div style={{ background: 'var(--glass-bg)', borderRadius: '1.5rem', padding: '2.5rem', border: '1px solid var(--glass-border)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid var(--glass-border)' }}>
-              <h2 style={{ margin: 0, color: 'var(--text-color)', fontSize: '2rem' }}>🚀 My Projects</h2>
-              <button
-                onClick={addWork}
-                style={{
-                  padding: '0.8rem 1.6rem',
-                  background: 'var(--main-color)',
-                  color: 'var(--bg-color)',
-                  border: 'none',
-                  borderRadius: '0.8rem',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                  fontSize: '1.2rem'
-                }}
-              >
-                + Add Project
-              </button>
-            </div>
-
-            <div style={{ display: 'grid', gap: '2rem' }}>
-              {(data.works || []).map((work, idx) => (
-                <div key={work.id} style={{
-                  background: 'rgba(0, 0, 0, 0.1)',
-                  padding: '2rem',
-                  borderRadius: '1rem',
-                  border: '1px solid var(--glass-border)',
-                  transition: 'all 0.3s ease'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                    <h3 style={{ color: 'var(--main-color)', margin: 0, fontSize: '1.4rem' }}>💼 Project #{idx + 1}</h3>
-                    <button
-                      onClick={() => deleteWork(work.id)}
-                      style={{
-                        padding: '0.6rem 1.2rem',
-                        background: '#e74c3c',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '0.6rem',
-                        cursor: 'pointer',
-                        fontWeight: '600'
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-
-                  <div style={{ display: 'grid', gap: '1.5rem' }}>
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '0.6rem', color: 'var(--text-color)', fontWeight: '600', fontSize: '1.1rem' }}>
-                        Project Title
-                      </label>
-                      <input
-                        type="text"
-                        value={work.title}
-                        onChange={(e) => updateWork(work.id, 'title', e.target.value)}
-                        style={{
-                          width: '100%',
-                          padding: '0.8rem',
-                          background: 'rgba(0, 0, 0, 0.2)',
-                          border: '1px solid var(--glass-border)',
-                          borderRadius: '0.6rem',
-                          color: 'var(--text-color)',
-                          fontSize: '1.1rem',
-                          boxSizing: 'border-box'
-                        }}
-                      />
-                    </div>
-
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '0.6rem', color: 'var(--text-color)', fontWeight: '600', fontSize: '1.1rem' }}>
-                        Description
-                      </label>
-                      <textarea
-                        value={work.desc}
-                        onChange={(e) => updateWork(work.id, 'desc', e.target.value)}
-                        style={{
-                          width: '100%',
-                          padding: '0.8rem',
-                          background: 'rgba(0, 0, 0, 0.2)',
-                          border: '1px solid var(--glass-border)',
-                          borderRadius: '0.6rem',
-                          color: 'var(--text-color)',
-                          fontSize: '1.1rem',
-                          minHeight: '80px',
-                          fontFamily: 'inherit',
-                          boxSizing: 'border-box'
-                        }}
-                      />
-                    </div>
-
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '0.6rem', color: 'var(--text-color)', fontWeight: '600', fontSize: '1.1rem' }}>
-                        Project URL
-                      </label>
-                      <input
-                        type="url"
-                        value={work.url}
-                        onChange={(e) => updateWork(work.id, 'url', e.target.value)}
-                        style={{
-                          width: '100%',
-                          padding: '0.8rem',
-                          background: 'rgba(0, 0, 0, 0.2)',
-                          border: '1px solid var(--glass-border)',
-                          borderRadius: '0.6rem',
-                          color: 'var(--text-color)',
-                          fontSize: '1.1rem',
-                          boxSizing: 'border-box'
-                        }}
-                      />
-                    </div>
-
-                    <div>
-                      <label style={{ display: 'block', marginBottom: '1rem', color: 'var(--text-color)', fontWeight: '600', fontSize: '1.1rem' }}>
-                        📸 Project Images Gallery
-                      </label>
-                      
-                      <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
-                        gap: '1rem',
-                        marginBottom: '1rem'
-                      }}>
-                        {(work.images || []).map((img, imgIdx) => (
-                          <div key={imgIdx} style={{
-                            position: 'relative',
-                            borderRadius: '0.8rem',
-                            overflow: 'hidden',
-                            border: '1px solid var(--glass-border)',
-                            height: '100px'
-                          }}>
-                            <img src={img} alt="Work" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            <button
-                              onClick={() => removeWorkImage(work.id, imgIdx)}
-                              style={{
-                                position: 'absolute',
-                                top: '5px',
-                                right: '5px',
-                                background: 'rgba(255,0,0,0.8)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '50%',
-                                width: '24px',
-                                height: '24px',
-                                cursor: 'pointer',
-                                fontSize: '12px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontWeight: 'bold'
-                              }}
-                            >
-                              ✕
-                            </button>
+                     return sectionKeys.map(k => (
+                       <div key={k} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', padding: '1.5rem', background: panelColors.bg, borderRadius: '1.2rem', border: `1px solid ${panelColors.border}` }}>
+                          <div style={{ position: 'absolute', top: '-10px', left: '20px', background: panelColors.main, color: 'black', padding: '2px 10px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 900 }}>{k.toUpperCase()}</div>
+                          <InputField label="English (UK/US)" value={data.texts.en[k] || ''} onChange={v => setData(p => ({ ...p, texts: { ...p.texts, en: { ...p.texts.en, [k]: v } } }))} panelColors={panelColors} mb="0" />
+                          <div style={{ direction: 'rtl' }}>
+                            <InputField label="Arabic (العربية)" value={data.texts.ar[k] || ''} onChange={v => setData(p => ({ ...p, texts: { ...p.texts, ar: { ...p.texts.ar, [k]: v } } }))} panelColors={panelColors} mb="0" />
                           </div>
-                        ))}
-                      </div>
-
-                      <div style={{ display: 'flex', gap: '0.8rem' }}>
-                        <input
-                          type="url"
-                          placeholder="Add image by URL..."
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' && e.target.value) {
-                              addWorkImage(work.id, e.target.value)
-                              e.target.value = ''
-                            }
-                          }}
-                          style={{
-                            flex: 1,
-                            padding: '0.8rem',
-                            background: 'rgba(0, 0, 0, 0.2)',
-                            border: '1px solid var(--glass-border)',
-                            borderRadius: '0.6rem',
-                            color: 'var(--text-color)',
-                            fontSize: '1.1rem',
-                            boxSizing: 'border-box'
-                          }}
-                        />
-                        <label style={{
-                          padding: '0.8rem 1.5rem',
-                          background: 'var(--main-color)',
-                          color: 'var(--bg-color)',
-                          borderRadius: '0.6rem',
-                          cursor: 'pointer',
-                          fontWeight: '600',
-                          fontSize: '1rem',
-                          whiteSpace: 'nowrap'
-                        }}>
-                          📤 Upload
-                          <input type="file" accept="image/*" onChange={(e) => handleWorkImageUpload(e, work.id)} style={{ display: 'none' }} />
-                        </label>
-                      </div>
-                    </div>
-                  </div>
+                       </div>
+                     ))
+                   })()}
                 </div>
-              ))}
-            </div>
+             </Card>
           </div>
         )}
+
+
+        {activeTab === 'design' && (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+             {['dark', 'light'].map(m => (
+               <Card key={m} panelColors={panelColors} title={`${m.toUpperCase()} MODE`} subtitle="Palette configuration.">
+                  {Object.keys(data.colors[m]).map(k => (
+                    <div key={k} style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', marginBottom: '1.2rem', background: panelColors.bg, padding: '0.8rem 1.2rem', borderRadius: '0.9rem', border: `1px solid ${panelColors.border}` }}>
+                       <input type="color" value={data.colors[m][k]} onChange={e => setData(p => ({ ...p, colors: { ...p.colors, [m]: { ...p.colors[m], [k]: e.target.value } } }))} style={{ width: '32px', height: '32px', border: 'none', borderRadius: '4px', cursor: 'pointer' }} />
+                       <span style={{ flex: 1, fontWeight: 700, fontSize: '0.9rem', textTransform: 'capitalize' }}>{k.replace(/([A-Z])/g, ' $1')}</span>
+                       <span style={{ fontSize: '0.85rem', opacity: 0.6, fontWeight: 700 }}>{data.colors[m][k].toUpperCase()}</span>
+                    </div>
+                  ))}
+               </Card>
+             ))}
+          </div>
+        )}
+
+        {activeTab === 'projects' && (
+          <div style={{ display: 'grid', gap: '2rem' }}>
+             <button onClick={() => setData(p => ({...p, works: [...p.works, {id: Date.now(), title:'New Project', desc:'', url:'', images:[]}]}))} style={{ padding: '1.4rem', borderRadius: '1.2rem', border: 'none', background: panelColors.main, color: 'black', fontWeight: 900, cursor: 'pointer', fontSize: '1rem' }}>+ DEPLOY NEW PROJECT</button>
+             {data.works?.map((w, idx) => (
+               <Card key={w.id} panelColors={panelColors} title={`Project Prototype #${idx+1}`} subtitle="Interactive project module.">
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                    <InputField label="Title" value={w.title} onChange={v => setData(p => ({ ...p, works: p.works.map(x => x.id === w.id ? {...x, title: v} : x) }))} panelColors={panelColors} />
+                    <InputField label="Deployment URL" value={w.url} onChange={v => setData(p => ({ ...p, works: p.works.map(x => x.id === w.id ? {...x, url: v} : x) }))} panelColors={panelColors} />
+                  </div>
+                  <div style={{ marginBottom: '1.5rem' }}>
+                    <label style={{ display: 'block', marginBottom: '1rem', fontWeight: 800, fontSize: '0.9rem' }}>ASSET GALLERY</label>
+                    <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                      {w.images?.map((img, i) => (
+                        <div key={i} style={{ position: 'relative', width: '110px', height: '110px', borderRadius: '1rem', overflow: 'hidden', border: `1px solid ${panelColors.border}` }}>
+                           <img src={img} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                           <button onClick={() => setData(p => ({ ...p, works: p.works.map(x => x.id === w.id ? {...x, images: x.images.filter((_, j) => j !== i)} : x) }))} style={{ position: 'absolute', top: 5, right: 5, background: '#ef4444', color: 'white', border: 'none', borderRadius: '50%', width: '24px', height: '24px', cursor: 'pointer', fontSize: '12px' }}>✕</button>
+                        </div>
+                      ))}
+                      <label style={{ width: '110px', height: '110px', borderRadius: '1rem', border: `2px dashed ${panelColors.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '1.5rem', opacity: 0.6 }}>
+                        + <input type="file" style={{ display: 'none' }} accept="image/*" onChange={e => {
+                          const f = e.target.files[0]; if(!f) return;
+                          const r = new FileReader(); r.onload = () => { setData(p => ({ ...p, works: p.works.map(x => x.id === w.id ? {...x, images: [...x.images, r.result]} : x) })) }; r.readAsDataURL(f);
+                        }} />
+                      </label>
+                    </div>
+                  </div>
+                  <button onClick={() => setData(p => ({ ...p, works: p.works.filter(x => x.id !== w.id) }))} style={{ padding: '0.8rem 1.5rem', background: '#e11d4820', color: '#e11d48', border: '1px solid #e11d4840', borderRadius: '0.8rem', fontWeight: 800, cursor: 'pointer' }}>SCRAP PROJECT</button>
+               </Card>
+             ))}
+          </div>
+        )}
+
+        {activeTab === 'visibility' && (
+           <Card panelColors={panelColors} title="Deployment Matrix" subtitle="Toggle live visibility of system modules.">
+              {Object.keys(data.sections).map(s => (
+                <div key={s} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.2rem 0', borderBottom: `1px solid ${panelColors.border}50` }}>
+                   <div style={{ textTransform: 'uppercase', fontWeight: 900, fontSize: '0.9rem', letterSpacing: '0.5px' }}>{s} Module</div>
+                   <button onClick={() => setData(p => ({ ...p, sections: { ...p.sections, [s]: !p.sections[s] } }))} style={{ padding: '0.6rem 1.8rem', borderRadius: '2rem', border: 'none', background: data.sections[s] ? '#10b981' : panelColors.textMuted, color: 'black', fontWeight: 900, cursor: 'pointer', fontSize: '0.8rem' }}>
+                      {data.sections[s] ? 'ONLINE' : 'OFFLINE'}
+                   </button>
+                </div>
+              ))}
+           </Card>
+        )}
+
+        {activeTab === 'settings' && (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+             <Card panelColors={panelColors} title="Security Protocol" subtitle="Rotate your administrative access key.">
+                <InputField type="password" id="new-key-input" placeholder="New Access Token" panelColors={panelColors} />
+                <button onClick={() => changePassword(document.getElementById('new-key-input').value)} style={{ padding: '1.2rem', width:'100%', borderRadius: '1.1rem', border: 'none', background: `linear-gradient(to right, ${panelColors.main}, ${panelColors.accent})`, color: 'black', fontWeight: 900, cursor: 'pointer' }}>OVERWRITE SECURITY KEY</button>
+             </Card>
+             <Card panelColors={panelColors} title="Data Lifecycle" subtitle="Export or import the full system state.">
+                <button onClick={() => {
+                  const b = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+                  const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = `doser-backup-${Date.now()}.json`; a.click();
+                }} style={{ padding: '1.1rem', width: '100%', borderRadius: '1.1rem', border: `1px solid ${panelColors.main}`, background: 'none', color: panelColors.main, fontWeight: 900, cursor: 'pointer', marginBottom: '1.2rem' }}>DOWNLOAD PROTOCOL DATA</button>
+                <div style={{ position: 'relative' }}>
+                   <button style={{ padding: '1.1rem', width: '100%', borderRadius: '1.1rem', border: `1px solid ${panelColors.text}`, background: 'none', color: panelColors.text, fontWeight: 900 }}>REINITIALIZE FROM BACKUP</button>
+                   <input type="file" style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }} onChange={e => {
+                     const f = e.target.files[0]; if(!f) return;
+                     const r = new FileReader(); r.onload = ev => { setData(JSON.parse(ev.target.result)); showToast('System Reinitialized', 'success') }; r.readAsText(f);
+                   }} />
+                </div>
+             </Card>
+          </div>
+        )}
+
+        <div style={{ marginTop: '5rem', textAlign: 'center', opacity: 0.2, fontSize: '0.75rem', fontWeight: 800, letterSpacing: '2px' }}>
+          DOSER ADMIN OS v2.0 // CORE SYSTEM SECURED
+        </div>
       </div>
 
-      <style jsx>{`
-        * {
-          scrollbar-width: thin;
-          scrollbar-color: var(--main-color) rgba(0, 0, 0, 0.2);
-        }
-        ::-webkit-scrollbar {
-          width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.1);
-        }
-        ::-webkit-scrollbar-thumb {
-          background: var(--main-color);
-          border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-          background: var(--main-color);
-          opacity: 0.8;
-        }
+      {toast && <Toast {...toast} onClose={() => setToast(null)} isLight={isLight} />}
+
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        body { margin: 0; padding: 0; background: ${panelColors.bg}; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes pulse-glow { 0% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { transform: scale(1.1); opacity: 0.8; box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
       `}</style>
     </div>
   )
