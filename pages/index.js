@@ -258,16 +258,18 @@ export default function Home({ initialData }) {
         {/* Anti-Gravity SEO Engine v2.0 */}
         <title>{lang === 'ar' ? 'عبدالرحمن السيد (Doser) | مبرمج مواقع محترف وخبير React' : 'Abdelrahman Doser | Expert Full-Stack Developer & React Specialist'}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="robots" content="index, follow" />
+        <meta name="theme-color" content="#000000" />
         
         {/* Core Keywords and Authority Tags */}
-        <meta name="description" content={lang === 'ar' ? 'هل تبحث عن مبرمج مواقع محترف؟ عبدالرحمن السيد (Doser) هو مبرمج احترافى متخصص في React و Next.js ودمج الذكاء الاصطناعي. اكتشف معرض أعمال أفضل مبرمج في مصر.' : 'Expert Full-Stack Web Developer. Abdelrahman Doser (Doser) is a professional programmer specializing in React, Next.js, and AI. Explore projects by Egypt\'s leading software engineer.'} />
-        <meta name="keywords" content="عبدالرحمن السيد, عبدالرحمن Doser, مبرمج مواقع, مبرمج احترافى, مبرمج react, مبرمج ويب, افضل مبرمج في مصر, مبرمج واجهات, Abdelrahman Doser, Doser, Full-Stack Developer, Freelance Programmer Egypt, React Expert" />
+        <meta name="description" content={lang === 'ar' ? 'هل تبحث عن مبرمج مواقع محترف؟ عبدالرحمن السيد (دوسر) هو مبرمج احترافي في React و Next.js و AI، ويقدم خدمات تطوير الويب والأمن السيبراني والهكر الأخلاقي. اكتشف أعمال أفضل مبرمج عربي.' : 'Searching for a professional programmer? Abdelrahman Doser is a full-stack developer specializing in React, Next.js, AI, ethical hacking, and cybersecurity. Explore the portfolio of a trusted software engineer.'} />
+        <meta name="keywords" content="عبدالرحمن السيد, عبدالرحمن دوزر, عبدالرحمن قنديل, عبدالرحمن السيد قنديل, Doser, مبرمج مواقع, مبرمج React, مبرمج Full-Stack, هكر أخلاقي, امن سيبراني, مبرمج عربي, Abdelrahman, Abdelrahman Elsayed, Abdelrahman Elsayed Kandil, Abdelrahman Elsayed Doser, Abdelrahman Elsayed Kandil Doser, ethical hacker, cybersecurity, web developer, React developer" />
         <meta name="author" content="Abdelrahman Doser" />
         <link rel="canonical" href={siteUrl} />
 
         {/* Global Social Sharing (Open Graph) */}
-        <meta property="og:title" content={lang === 'ar' ? 'عبدالرحمن السيد | مبرمج مواقع محترف' : 'Abdelrahman Doser | Expert Web Developer'} />
-        <meta property="og:description" content={lang === 'ar' ? 'خبير في بناء وتطوير تطبيقات الويب الحديثة بذكاء اصطناعي.' : 'Building high-performance, AI-driven web architectures.'} />
+        <meta property="og:title" content={lang === 'ar' ? 'عبدالرحمن السيد | مبرمج مواقع محترف وخبير أمن سيبراني' : 'Abdelrahman Doser | Expert Web Developer & Ethical Hacker Enthusiast'} />
+        <meta property="og:description" content={lang === 'ar' ? 'خبير في برمجة الويب، React، Next.js، والذكاء الاصطناعي مع اهتمام بالأمن السيبراني والهكر الأخلاقي.' : 'Expert in web development, React, Next.js, and AI, with a focus on cybersecurity and ethical hacking.'} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={siteUrl} />
         <meta property="og:image" content={absoluteFullImg} />
@@ -276,8 +278,8 @@ export default function Home({ initialData }) {
         
         {/* Professional Twitter/X Card Support */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Abdelrahman Doser | Professional Web Developer" />
-        <meta name="twitter:description" content="Expert in React, Next.js, and Advanced AI Integration." />
+        <meta name="twitter:title" content={lang === 'ar' ? 'عبدالرحمن السيد | مبرمج وخبير أمن' : 'Abdelrahman Doser | Web Developer & Cybersecurity Practitioner'} />
+        <meta name="twitter:description" content={lang === 'ar' ? 'مطور ويب محترف متخصص في React و Next.js، أمن سيبراني، وهكر أخلاقي.' : 'Professional web developer specializing in React, Next.js, cybersecurity, and ethical hacking.'} />
         <meta name="twitter:image" content={absoluteFullImg} />
 
         {/* JSON-LD Schema.org Data (The Advanced SEO Secret) */}
@@ -286,17 +288,17 @@ export default function Home({ initialData }) {
             "@context": "https://schema.org",
             "@type": "Person",
             "name": "Abdelrahman Doser",
-            "alternateName": ["عبدالرحمن السيد", "دوسر", "Abdelrahman Elsayed"],
+            "alternateName": ["عبدالرحمن السيد", "عبدالرحمن دوزر", "عبدالرحمن قنديل", "عبدالرحمن السيد قنديل", "Abdelrahman Elsayed", "Abdelrahman Elsayed Kandil", "Abdelrahman Elsayed Doser", "Doser"],
             "url": siteUrl,
             "image": absoluteFullImg,
             "jobTitle": "Full-Stack Software Engineer & AI Specialist",
-            "description": "Professional Programmer specialized in high-performance web applications using React and Next.js.",
+            "description": "Professional Programmer specialized in high-performance web applications using React and Next.js, with knowledge in ethical hacking and cybersecurity.",
             "address": {
               "@type": "PostalAddress",
               "addressLocality": "Cairo",
               "addressCountry": "Egypt"
             },
-            "knowsAbout": ["Web Development", "React", "Next.js", "Node.js", "AI Integration", "Software Architecture"],
+            "knowsAbout": ["Web Development", "React", "Next.js", "Node.js", "AI Integration", "Cybersecurity", "Ethical Hacking", "Software Architecture"],
             "sameAs": [
               "https://www.facebook.com/profile.php?id=61581958772971",
               "https://www.instagram.com/_doser_1/",

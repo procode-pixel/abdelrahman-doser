@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
 Disallow: /doser-secret-panel
+Disallow: /api/
 
 Sitemap: https://abdelrahman-doser.vercel.app/sitemap.xml
