@@ -250,26 +250,49 @@ export default function Home({ initialData }) {
 
   // Advanced SEO & Social Sharing Optimization
   const siteUrl = "https://abdelrahman-doser.vercel.app";
+  const seoDefaults = {
+    title: {
+      en: 'Abdelrahman Doser | Expert Full-Stack Developer & React Specialist',
+      ar: 'عبدالرحمن السيد (Doser) | مبرمج مواقع محترف وخبير React'
+    },
+    description: {
+      en: 'Searching for a professional programmer? Abdelrahman Doser is a full-stack developer specializing in React, Next.js, AI, ethical hacking, and cybersecurity. Explore the portfolio of a trusted software engineer.',
+      ar: 'هل تبحث عن مبرمج مواقع محترف؟ عبدالرحمن السيد (دوسر) هو مبرمج احترافي في React و Next.js و AI، ويقدم خدمات تطوير الويب والأمن السيبراني والهكر الأخلاقي. اكتشف أعمال أفضل مبرمج عربي.'
+    },
+    keywords: 'عبدالرحمن السيد, عبدالرحمن دوزر, عبدالرحمن قنديل, عبدالرحمن السيد قنديل, Doser, مبرمج مواقع, مبرمج React, مبرمج Full-Stack, هكر أخلاقي, امن سيبراني, مبرمج عربي, Abdelrahman, Abdelrahman Elsayed, Abdelrahman Elsayed Kandil, Abdelrahman Elsayed Doser, Abdelrahman Elsayed Kandil Doser, ethical hacker, cybersecurity, web developer, React developer',
+    author: 'Abdelrahman Doser'
+  };
+
+  const seoSettings = {
+    ...seoDefaults,
+    ...(adminData?.seo || {}),
+    title: { ...seoDefaults.title, ...(adminData?.seo?.title || {}) },
+    description: { ...seoDefaults.description, ...(adminData?.seo?.description || {}) }
+  };
+
+  const seoTitle = lang === 'ar' ? seoSettings.title.ar : seoSettings.title.en;
+  const seoDescription = lang === 'ar' ? seoSettings.description.ar : seoSettings.description.en;
+  const seoKeywords = seoSettings.keywords;
   const absoluteFullImg = `${siteUrl}${images.personal}`;
 
   return (
     <>
       <Head>
         {/* Anti-Gravity SEO Engine v2.0 */}
-        <title>{lang === 'ar' ? 'عبدالرحمن السيد (Doser) | مبرمج مواقع محترف وخبير React' : 'Abdelrahman Doser | Expert Full-Stack Developer & React Specialist'}</title>
+        <title>{seoTitle}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="robots" content="index, follow" />
         <meta name="theme-color" content="#000000" />
         
         {/* Core Keywords and Authority Tags */}
-        <meta name="description" content={lang === 'ar' ? 'هل تبحث عن مبرمج مواقع محترف؟ عبدالرحمن السيد (دوسر) هو مبرمج احترافي في React و Next.js و AI، ويقدم خدمات تطوير الويب والأمن السيبراني والهكر الأخلاقي. اكتشف أعمال أفضل مبرمج عربي.' : 'Searching for a professional programmer? Abdelrahman Doser is a full-stack developer specializing in React, Next.js, AI, ethical hacking, and cybersecurity. Explore the portfolio of a trusted software engineer.'} />
-        <meta name="keywords" content="عبدالرحمن السيد, عبدالرحمن دوزر, عبدالرحمن قنديل, عبدالرحمن السيد قنديل, Doser, مبرمج مواقع, مبرمج React, مبرمج Full-Stack, هكر أخلاقي, امن سيبراني, مبرمج عربي, Abdelrahman, Abdelrahman Elsayed, Abdelrahman Elsayed Kandil, Abdelrahman Elsayed Doser, Abdelrahman Elsayed Kandil Doser, ethical hacker, cybersecurity, web developer, React developer" />
-        <meta name="author" content="Abdelrahman Doser" />
+        <meta name="description" content={seoDescription} />
+        <meta name="keywords" content={seoKeywords} />
+        <meta name="author" content={seoSettings.author} />
         <link rel="canonical" href={siteUrl} />
 
         {/* Global Social Sharing (Open Graph) */}
-        <meta property="og:title" content={lang === 'ar' ? 'عبدالرحمن السيد | مبرمج مواقع محترف وخبير أمن سيبراني' : 'Abdelrahman Doser | Expert Web Developer & Ethical Hacker Enthusiast'} />
-        <meta property="og:description" content={lang === 'ar' ? 'خبير في برمجة الويب، React، Next.js، والذكاء الاصطناعي مع اهتمام بالأمن السيبراني والهكر الأخلاقي.' : 'Expert in web development, React, Next.js, and AI, with a focus on cybersecurity and ethical hacking.'} />
+        <meta property="og:title" content={seoTitle} />
+        <meta property="og:description" content={seoDescription} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={siteUrl} />
         <meta property="og:image" content={absoluteFullImg} />
@@ -278,8 +301,8 @@ export default function Home({ initialData }) {
         
         {/* Professional Twitter/X Card Support */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={lang === 'ar' ? 'عبدالرحمن السيد | مبرمج وخبير أمن' : 'Abdelrahman Doser | Web Developer & Cybersecurity Practitioner'} />
-        <meta name="twitter:description" content={lang === 'ar' ? 'مطور ويب محترف متخصص في React و Next.js، أمن سيبراني، وهكر أخلاقي.' : 'Professional web developer specializing in React, Next.js, cybersecurity, and ethical hacking.'} />
+        <meta name="twitter:title" content={seoTitle} />
+        <meta name="twitter:description" content={seoDescription} />
         <meta name="twitter:image" content={absoluteFullImg} />
 
         {/* JSON-LD Schema.org Data (The Advanced SEO Secret) */}
@@ -313,7 +336,7 @@ export default function Home({ initialData }) {
       </Head>
 
       <header className="header">
-        <a href="#home" className="logo">Abdelrahman<span>.</span></a>
+        <a href="#home" className="logo">{t('name')}<span>.</span></a>
 
         <i className={`bx ${isMenuOpen ? 'bx-x' : 'bx-menu'}`} id="menu-icon" onClick={() => setIsMenuOpen(!isMenuOpen)}></i>
 

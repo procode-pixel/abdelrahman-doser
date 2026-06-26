@@ -60,6 +60,17 @@ const DEFAULT_DATA = {
   },
   sections: { home: true, education: true, services: true, contact: true, mywebsites: true },
   images: { personal: '/personal.png', icon: '/icon.png' },
+  seo: {
+    title: {
+      en: 'Abdelrahman Doser | Expert Full-Stack Developer & React Specialist',
+      ar: 'عبدالرحمن السيد (Doser) | مبرمج مواقع محترف وخبير React'
+    },
+    description: {
+      en: 'Searching for a professional programmer? Abdelrahman Doser is a full-stack developer specializing in React, Next.js, AI, ethical hacking, and cybersecurity. Explore the portfolio of a trusted software engineer.',
+      ar: 'هل تبحث عن مبرمج مواقع محترف؟ عبدالرحمن السيد (دوسر) هو مبرمج احترافي في React و Next.js و AI، ويقدم خدمات تطوير الويب والأمن السيبراني والهكر الأخلاقي. اكتشف أعمال أفضل مبرمج عربي.'
+    },
+    keywords: 'عبدالرحمن السيد, عبدالرحمن دوزر, عبدالرحمن قنديل, عبدالرحمن السيد قنديل, Doser, مبرمج مواقع, مبرمج React, مبرمج Full-Stack, هكر أخلاقي, امن سيبراني, مبرمج عربي, Abdelrahman, Abdelrahman Elsayed, Abdelrahman Elsayed Kandil, Abdelrahman Elsayed Doser, Abdelrahman Elsayed Kandil Doser, ethical hacker, cybersecurity, web developer, React developer'
+  },
   works: [ ]
 }
 
@@ -347,6 +358,7 @@ export default function AdminOS() {
   const Tabs = [
     { id: 'overview', label: 'Overview', icon: '📊' },
     { id: 'content', label: 'Content', icon: '📝' },
+    { id: 'seo', label: 'SEO', icon: '🔎' },
     { id: 'design', label: 'Design', icon: '🎨' },
     { id: 'projects', label: 'Portfolio', icon: '🚀' },
     { id: 'visibility', label: 'Visibility', icon: '👁️' },
@@ -563,6 +575,53 @@ export default function AdminOS() {
           </div>
         )}
 
+        {activeTab === 'seo' && (
+          <div style={{ display: 'grid', gap: '2rem' }}>
+            <Card panelColors={panelColors} title="SEO & Branding" subtitle="Update page metadata, keywords, and brand visuals.">
+              <div style={{ display: 'grid', gap: '1.5rem' }}>
+                <InputField label="Title (English)" value={data.seo?.title?.en || ''} onChange={v => setData(p => ({ ...p, seo: { ...p.seo, title: { ...p.seo?.title, en: v } } }))} panelColors={panelColors} />
+                <InputField label="Title (Arabic)" value={data.seo?.title?.ar || ''} onChange={v => setData(p => ({ ...p, seo: { ...p.seo, title: { ...p.seo?.title, ar: v } } }))} panelColors={panelColors} />
+                <InputField label="Description (English)" value={data.seo?.description?.en || ''} onChange={v => setData(p => ({ ...p, seo: { ...p.seo, description: { ...p.seo?.description, en: v } } }))} panelColors={panelColors} />
+                <InputField label="Description (Arabic)" value={data.seo?.description?.ar || ''} onChange={v => setData(p => ({ ...p, seo: { ...p.seo, description: { ...p.seo?.description, ar: v } } }))} panelColors={panelColors} />
+                <InputField label="Keywords (comma-separated)" value={data.seo?.keywords || ''} onChange={v => setData(p => ({ ...p, seo: { ...p.seo, keywords: v } }))} panelColors={panelColors} />
+                <InputField label="Favicon / Logo URL" value={data.images?.icon || ''} onChange={v => setData(p => ({ ...p, images: { ...p.images, icon: v } }))} panelColors={panelColors} />
+                <div style={{ display: 'grid', gap: '1rem' }}>
+                  <label style={{ fontWeight: 700, color: panelColors.text }}>Upload Favicon / Logo</label>
+                  <input type="file" accept="image/*" onChange={e => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    const reader = new FileReader()
+                    reader.onload = (event) => setData(p => ({ ...p, images: { ...p.images, icon: event.target.result } }))
+                    reader.readAsDataURL(file)
+                  }} style={{ padding: '0.75rem 1rem', borderRadius: '0.75rem', border: `1px solid ${panelColors.border}`, background: panelColors.inputBg, color: panelColors.text }} />
+                  {data.images?.icon && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                      <img src={data.images.icon} alt="Logo preview" style={{ width: '60px', height: '60px', objectFit: 'contain', borderRadius: '0.75rem', border: `1px solid ${panelColors.border}` }} />
+                      <span style={{ color: panelColors.textMuted, fontSize: '0.9rem' }}>Preview from uploaded or entered URL.</span>
+                    </div>
+                  )}
+                </div>
+                <InputField label="Hero Image URL" value={data.images?.personal || ''} onChange={v => setData(p => ({ ...p, images: { ...p.images, personal: v } }))} panelColors={panelColors} />
+                <div style={{ display: 'grid', gap: '1rem' }}>
+                  <label style={{ fontWeight: 700, color: panelColors.text }}>Upload Hero Image</label>
+                  <input type="file" accept="image/*" onChange={e => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    const reader = new FileReader()
+                    reader.onload = (event) => setData(p => ({ ...p, images: { ...p.images, personal: event.target.result } }))
+                    reader.readAsDataURL(file)
+                  }} style={{ padding: '0.75rem 1rem', borderRadius: '0.75rem', border: `1px solid ${panelColors.border}`, background: panelColors.inputBg, color: panelColors.text }} />
+                  {data.images?.personal && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                      <img src={data.images.personal} alt="Hero preview" style={{ width: '100px', height: '60px', objectFit: 'cover', borderRadius: '0.75rem', border: `1px solid ${panelColors.border}` }} />
+                      <span style={{ color: panelColors.textMuted, fontSize: '0.9rem' }}>Preview from uploaded or entered URL.</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
 
         {activeTab === 'design' && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
