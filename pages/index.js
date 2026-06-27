@@ -252,8 +252,8 @@ export default function Home({ initialData }) {
   const siteUrl = "https://abdelrahman-doser.vercel.app";
   const seoDefaults = {
     title: {
-      en: 'Abdelrahman Doser | Expert Full-Stack Developer & React Specialist',
-      ar: 'عبدالرحمن السيد (Doser) | مبرمج مواقع محترف وخبير React'
+      en: 'Abdelrahman Doser | Portfolio',
+      ar: 'عبدالرحمن دوسر | بورتفوليو'
     },
     description: {
       en: 'Searching for a professional programmer? Abdelrahman Doser is a full-stack developer specializing in React, Next.js, AI, ethical hacking, and cybersecurity. Explore the portfolio of a trusted software engineer.',
@@ -307,8 +307,10 @@ export default function Home({ initialData }) {
         <meta property="og:image" content={absoluteLogoImage} />
         <meta property="og:image:secure_url" content={absoluteLogoImage} />
         <meta property="og:image:alt" content={imageAltText} />
-        <meta property="og:site_name" content="Doser Portfolio" />
+        <meta property="og:site_name" content="Abdelrahman Doser | Portfolio" />
         <meta property="og:locale" content={lang === 'ar' ? 'ar_EG' : 'en_US'} />
+        <meta name="application-name" content="Abdelrahman Doser | Portfolio" />
+        <meta name="apple-mobile-web-app-title" content="Abdelrahman Doser | Portfolio" />
         
         {/* Professional Twitter/X Card Support */}
         <meta name="twitter:card" content="summary_large_image" />
@@ -321,29 +323,49 @@ export default function Home({ initialData }) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Person",
-            "name": "Abdelrahman Doser",
-            "alternateName": ["عبدالرحمن السيد", "عبدالرحمن دوزر", "عبدالرحمن قنديل", "عبدالرحمن السيد قنديل", "Abdelrahman Elsayed", "Abdelrahman Elsayed Kandil", "Abdelrahman Elsayed Doser", "Doser"],
-            "url": siteUrl,
-            "image": absoluteFullImg,
-            "jobTitle": "Full-Stack Software Engineer & AI Specialist",
-            "description": "Professional Programmer specialized in high-performance web applications using React and Next.js, with knowledge in ethical hacking and cybersecurity.",
-            "address": {
-              "@type": "PostalAddress",
-              "addressLocality": "Cairo",
-              "addressCountry": "Egypt"
-            },
-            "knowsAbout": ["Web Development", "React", "Next.js", "Node.js", "AI Integration", "Cybersecurity", "Ethical Hacking", "Software Architecture"],
-            "sameAs": [
-              "https://www.facebook.com/profile.php?id=61581958772971",
-              "https://www.instagram.com/_doser_1/",
-              "https://github.com/procode-pixel",
-              "https://wa.me/201151071517"
+            "@graph": [
+              {
+                "@type": "Person",
+                "name": "Abdelrahman Doser",
+                "alternateName": ["عبدالرحمن السيد", "عبدالرحمن دوزر", "عبدالرحمن قنديل", "عبدالرحمن السيد قنديل", "Abdelrahman Elsayed", "Abdelrahman Elsayed Kandil", "Abdelrahman Elsayed Doser", "Doser"],
+                "url": siteUrl,
+                "image": absoluteFullImg,
+                "jobTitle": "Full-Stack Software Engineer & AI Specialist",
+                "description": "Professional Programmer specialized in high-performance web applications using React and Next.js, with knowledge in ethical hacking and cybersecurity.",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "Cairo",
+                  "addressCountry": "Egypt"
+                },
+                "knowsAbout": ["Web Development", "React", "Next.js", "Node.js", "AI Integration", "Cybersecurity", "Ethical Hacking", "Software Architecture"],
+                "sameAs": [
+                  "https://www.facebook.com/profile.php?id=61581958772971",
+                  "https://www.instagram.com/_doser_1/",
+                  "https://github.com/procode-pixel",
+                  "https://wa.me/201151071517"
+                ]
+              },
+              {
+                "@type": "WebSite",
+                "url": siteUrl,
+                "name": seoTitle,
+                "description": seoDescription,
+                "publisher": {
+                  "@type": "Person",
+                  "name": "Abdelrahman Doser"
+                },
+                "image": {
+                  "@type": "ImageObject",
+                  "url": absoluteLogoImage
+                }
+              }
             ]
           })
         }} />
 
-        <link rel="icon" href={images.icon} />
+        <link rel="icon" href={absoluteLogoImage} />
+        <link rel="shortcut icon" href={absoluteLogoImage} />
+        <link rel="apple-touch-icon" href={absoluteLogoImage} />
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet' />
       </Head>
 
