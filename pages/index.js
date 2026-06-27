@@ -281,7 +281,9 @@ export default function Home({ initialData }) {
   };
 
   const absoluteFullImg = getAbsoluteUrl(images.personal);
-  const absoluteLogoImage = getAbsoluteUrl(images.icon || images.personal);
+  const absoluteLogoImage = getAbsoluteUrl(images.icon || '/apple-touch-icon.png');
+  const faviconUrl = `${siteUrl}/favicon.ico`;
+  const appleTouchIconUrl = `${siteUrl}/apple-touch-icon.png`;
   const imageAltText = lang === 'ar' ? 'شعار عبدالرحمن دوسر' : 'Abdelrahman Doser logo';
 
   return (
@@ -297,6 +299,7 @@ export default function Home({ initialData }) {
         <meta name="description" content={seoDescription} />
         <meta name="keywords" content={seoKeywords} />
         <meta name="author" content={seoSettings.author} />
+        <meta name="site_name" content={seoTitle} />
         <link rel="canonical" href={siteUrl} />
 
         {/* Global Social Sharing (Open Graph) */}
@@ -307,10 +310,10 @@ export default function Home({ initialData }) {
         <meta property="og:image" content={absoluteLogoImage} />
         <meta property="og:image:secure_url" content={absoluteLogoImage} />
         <meta property="og:image:alt" content={imageAltText} />
-        <meta property="og:site_name" content="Abdelrahman Doser | Portfolio" />
+        <meta property="og:site_name" content={seoTitle} />
         <meta property="og:locale" content={lang === 'ar' ? 'ar_EG' : 'en_US'} />
-        <meta name="application-name" content="Abdelrahman Doser | Portfolio" />
-        <meta name="apple-mobile-web-app-title" content="Abdelrahman Doser | Portfolio" />
+        <meta name="application-name" content={seoTitle} />
+        <meta name="apple-mobile-web-app-title" content={seoTitle} />
         
         {/* Professional Twitter/X Card Support */}
         <meta name="twitter:card" content="summary_large_image" />
@@ -363,9 +366,10 @@ export default function Home({ initialData }) {
           })
         }} />
 
-        <link rel="icon" href={absoluteLogoImage} />
-        <link rel="shortcut icon" href={absoluteLogoImage} />
-        <link rel="apple-touch-icon" href={absoluteLogoImage} />
+        <link rel="icon" href={faviconUrl} sizes="any" />
+        <link rel="shortcut icon" href={faviconUrl} />
+        <link rel="apple-touch-icon" href={appleTouchIconUrl} />
+        <meta name="msapplication-TileImage" content={faviconUrl} />
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet' />
       </Head>
 
