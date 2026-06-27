@@ -273,7 +273,16 @@ export default function Home({ initialData }) {
   const seoTitle = lang === 'ar' ? seoSettings.title.ar : seoSettings.title.en;
   const seoDescription = lang === 'ar' ? seoSettings.description.ar : seoSettings.description.en;
   const seoKeywords = seoSettings.keywords;
-  const absoluteFullImg = `${siteUrl}${images.personal}`;
+
+  const getAbsoluteUrl = (src) => {
+    if (!src) return `${siteUrl}/icon.png`;
+    if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('data:')) return src;
+    return `${siteUrl}${src.startsWith('/') ? '' : '/'}${src}`;
+  };
+
+  const absoluteFullImg = getAbsoluteUrl(images.personal);
+  const absoluteLogoImage = getAbsoluteUrl(images.icon || images.personal);
+  const imageAltText = lang === 'ar' ? 'شعار عبدالرحمن دوسر' : 'Abdelrahman Doser logo';
 
   return (
     <>
@@ -295,7 +304,9 @@ export default function Home({ initialData }) {
         <meta property="og:description" content={seoDescription} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={siteUrl} />
-        <meta property="og:image" content={absoluteFullImg} />
+        <meta property="og:image" content={absoluteLogoImage} />
+        <meta property="og:image:secure_url" content={absoluteLogoImage} />
+        <meta property="og:image:alt" content={imageAltText} />
         <meta property="og:site_name" content="Doser Portfolio" />
         <meta property="og:locale" content={lang === 'ar' ? 'ar_EG' : 'en_US'} />
         
@@ -303,7 +314,8 @@ export default function Home({ initialData }) {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={seoTitle} />
         <meta name="twitter:description" content={seoDescription} />
-        <meta name="twitter:image" content={absoluteFullImg} />
+        <meta name="twitter:image" content={absoluteLogoImage} />
+        <meta name="twitter:image:alt" content={imageAltText} />
 
         {/* JSON-LD Schema.org Data (The Advanced SEO Secret) */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{
